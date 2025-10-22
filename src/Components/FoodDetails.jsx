@@ -2,7 +2,8 @@ import React, { useContext, useState } from "react";
 import { useLoaderData } from "react-router";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { AuthContext } from "../Provider/AuthContext";
+import AuthContext from "../Provider/AuthContext";
+
 
 const FoodDetails = () => {
     const food = useLoaderData();

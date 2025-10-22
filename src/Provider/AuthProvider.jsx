@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { AuthContext } from './AuthContext';
 import auth from '../Firebase/firebase.init.js';
 import axios from 'axios';
 import {
@@ -10,6 +9,7 @@ import {
     signInWithPopup,
     signOut
 } from 'firebase/auth';
+import AuthContext from './AuthContext.jsx';
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);

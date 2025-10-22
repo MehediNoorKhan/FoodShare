@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosSecure from "../Hooks/axiosSecure.js"; // ✅ Ensure this hook exists
-import { AuthContext } from "../Provider/AuthContext"; // ✅ Adjust to your actual AuthContext path
+import axiosSecure from "../Hooks/axiosSecure.js"; // ✅ Ensure this hook exists// ✅ Adjust to your actual AuthContext path
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import AuthContext from "../Provider/AuthContext.jsx";
 
 const Spinner = () => (
     <div className="flex justify-center items-center h-40">

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { NavLink } from "react-router";
-import { AuthContext } from "../Provider/AuthContext";
 import Loader from "./Loader";
+import AuthContext from "../Provider/AuthContext";
 
 const Header = () => {
     const { user, userData, logout, loading } = useContext(AuthContext);
@@ -42,6 +42,12 @@ const Header = () => {
                 className="mx-2 text-base hover:text-blue-600"
             >
                 My Food Request
+            </NavLink>
+            <NavLink
+                to={"/membership"}
+                className="mx-2 text-base hover:text-blue-600"
+            >
+                Membership
             </NavLink>
         </>
     );

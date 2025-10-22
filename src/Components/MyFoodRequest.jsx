@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axiosSecure from "../Hooks/axiosSecure";
-import { AuthContext } from "../Provider/AuthContext";
 import Loader from "./Loader";
+import AuthContext from "../Provider/AuthContext";
 
 const MyFoodRequest = () => {
     const { user } = useContext(AuthContext);

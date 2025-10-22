@@ -16,6 +16,8 @@ import axiosSecure from "../Hooks/axiosSecure";
 import MyFoodRequest from "../Components/MyFoodRequest";
 import About from "../Components/About";
 import FeaturedFoods from "../Components/FeaturedFoods";
+import Membership from "../Components/Membership";
+import PaymentSuccess from "../Components/PaymentSuccess";
 
 
 export const router = createBrowserRouter([
@@ -45,6 +47,14 @@ export const router = createBrowserRouter([
             {
                 path: '/addfood',
                 element: <PrivateRoute><AddFood></AddFood></PrivateRoute>
+            },
+            {
+                path: '/membership',
+                element: <PrivateRoute><Membership></Membership></PrivateRoute>
+            },
+            {
+                path: "/membership/success",
+                element: <PrivateRoute><PaymentSuccess /></PrivateRoute>,
             },
             {
                 path: '/availablefoods',

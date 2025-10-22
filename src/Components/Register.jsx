@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../Provider/AuthContext";
 import { Link, useNavigate } from "react-router";
 import SocialLogin from "./SocialLogin";
 import Swal from "sweetalert2";
 import axios from "axios";
+import AuthContext from "../Provider/AuthContext";
 
 const Register = () => {
     const { createUser, logout } = useContext(AuthContext);
@@ -22,6 +22,7 @@ const Register = () => {
             email,
             name: rest.name,
             photourl: rest.photourl,
+            membership: "no",
         };
 
         const hasUppercase = /[A-Z]/.test(password);

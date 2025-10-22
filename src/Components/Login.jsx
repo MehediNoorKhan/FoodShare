@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../Provider/AuthContext";
 import SocialLogin from "./SocialLogin";
 import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import AuthContext from "../Provider/AuthContext";
 
 const Login = () => {
     const { login } = useContext(AuthContext);
@@ -26,7 +26,7 @@ const Login = () => {
                 const user = result.user;
                 const lastVisited = localStorage.getItem(`lastVisited-${user.email}`);
 
-                navigate(lastVisited || "/"); 
+                navigate(lastVisited || "/");
             })
             .catch((error) => {
                 setLoading(false);

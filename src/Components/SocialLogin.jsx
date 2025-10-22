@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../Provider/AuthContext";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import axios from "axios";
+import AuthContext from "../Provider/AuthContext";
 
 const SocialLogin = ({ from }) => {
   const navigate = useNavigate();

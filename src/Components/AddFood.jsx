@@ -1,147 +1,113 @@
-import React, { useContext, useState } from "react";
-import { AuthContext } from "../Provider/AuthContext";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import useAuth from "../Hooks/useAuth";
 
-const AddFood = () => {
-    const { user, userData } = useContext(AuthContext);
-    const [formData, setFormData] = useState({
-        foodName: "",
-        foodImage: "",
-        foodQuantity: "",
-        pickupLocation: "",
-        expiredDateTime: "",
-        additionalNotes: "",
-    });
+export default function AddFood() {
+    const { user, token } = useAuth(); // user.email, user.displayName
+    const [users, setUsers] = useState([]);
+    const [foundCount, setFoundCount] = useState(0);
+    const [foodName, setFoodName] = useState("");
+    const [quantity, setQuantity] = useState(1);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-    const currentUser = userData.find(
-        (u) => String(u.email) === String(user?.email)
-    );
+    // Fetch all users safely
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const res = await axios.get("https://ass11github.vercel.app/users");
+                setUsers(res.data || []);
+            } catch (err) {
+                console.error("Failed to fetch users:", err);
+                setError("Could not load users. You can still add food for yourself.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUsers();
+    }, []);
 
-    const handleChange = (e) => {
-        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    };
+    // Fetch user's food count
+    useEffect(() => {
+        if (!user?.email) return;
+        const fetchCount = async () => {
+            try {
+                const res = await axios.get(`https://ass11github.vercel.app/food/count/${user.email}`);
+                setFoundCount(res.data.count || 0);
+            } catch (err) {
+                console.error("Failed to fetch food count:", err);
+            }
+        };
+        fetchCount();
+    }, [user?.email]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!foodName || quantity < 1) return;
 
-        if (!currentUser) {
-            toast.error("User data not found, please login again.");
-            return;
-        }
-
-        const newFood = {
-            ...formData,
-            foodQuantity: Number(formData.foodQuantity),
-            donorName: currentUser.name,
-            donorEmail: currentUser.email,
-            donorImage: currentUser.photoURL,
+        const foodData = {
+            donorEmail: user.email,
+            donorName: user.displayName,
+            foodName,
+            foodQuantity: quantity,
             foodStatus: "available",
+            createdAt: new Date(),
         };
 
         try {
-            const res = await axios.post("https://ass11github.vercel.app/food", newFood);
-            if (res.data.insertedId) {
-                toast.success("Food added successfully!");
-                setFormData({
-                    foodName: "",
-                    foodImage: "",
-                    foodQuantity: "",
-                    pickupLocation: "",
-                    expiredDateTime: "",
-                    additionalNotes: "",
-                });
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error("Failed to add food. Please try again.");
+            const res = await axios.post("https://ass11github.vercel.app/food", foodData);
+            alert("Food added successfully!");
+            setFoodName("");
+            setQuantity(1);
+            setFoundCount(prev => prev + 1); // update count
+        } catch (err) {
+            console.error("Failed to add food:", err);
+            alert("Failed to add food. Try again.");
         }
     };
 
+    if (loading) return <p>Loading...</p>;
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-indigo-100 flex items-center justify-center px-4 py-12">
-            <div className="w-full max-w-xl bg-white bg-opacity-90 shadow-2xl rounded-2xl p-8 backdrop-blur">
-                <h2 className="text-3xl font-bold text-center text-indigo-700 mb-8">
+        <div className="max-w-lg mx-auto p-4 bg-white shadow rounded mt-8">
+            <h2 className="text-xl font-bold mb-2">Add Food</h2>
+            <p className="mb-4 text-gray-600">
+                Hello, {user.displayName}! You have added <strong>{foundCount}</strong> food items so far.
+            </p>
+            {error && <p className="text-red-500 mb-2">{error}</p>}
+
+            {/* ORIGINAL FORM */}
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                <div>
+                    <label className="block mb-1 font-medium">Food Name</label>
+                    <input
+                        type="text"
+                        value={foodName}
+                        onChange={(e) => setFoodName(e.target.value)}
+                        className="w-full border px-2 py-1 rounded"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block mb-1 font-medium">Quantity</label>
+                    <input
+                        type="number"
+                        value={quantity}
+                        onChange={(e) => setQuantity(parseInt(e.target.value))}
+                        className="w-full border px-2 py-1 rounded"
+                        min={1}
+                        required
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                >
                     Add Food
-                </h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block font-medium">Food Name</label>
-                        <input
-                            type="text"
-                            name="foodName"
-                            value={formData.foodName}
-                            onChange={handleChange}
-                            required
-                            className="input input-bordered w-full"
-                        />
-                    </div>
-                    <div>
-                        <label className="block font-medium">Food Image URL</label>
-                        <input
-                            type="text"
-                            name="foodImage"
-                            value={formData.foodImage}
-                            onChange={handleChange}
-                            required
-                            className="input input-bordered w-full"
-                            placeholder="Image URL"
-                        />
-                    </div>
-                    <div>
-                        <label className="block font-medium">Food Quantity</label>
-                        <input
-                            type="number"
-                            name="foodQuantity"
-                            value={formData.foodQuantity}
-                            onChange={handleChange}
-                            required
-                            className="input input-bordered w-full"
-                            placeholder="e.g., 5"
-                        />
-                    </div>
-                    <div>
-                        <label className="block font-medium">Pickup Location</label>
-                        <input
-                            type="text"
-                            name="pickupLocation"
-                            value={formData.pickupLocation}
-                            onChange={handleChange}
-                            required
-                            className="input input-bordered w-full"
-                        />
-                    </div>
-                    <div>
-                        <label className="block font-medium">Expired Date/Time</label>
-                        <input
-                            type="datetime-local"
-                            name="expiredDateTime"
-                            value={formData.expiredDateTime}
-                            onChange={handleChange}
-                            required
-                            className="input input-bordered w-full"
-                        />
-                    </div>
-                    <div>
-                        <label className="block font-medium">Additional Notes</label>
-                        <textarea
-                            name="additionalNotes"
-                            value={formData.additionalNotes}
-                            onChange={handleChange}
-                            className="textarea textarea-bordered w-full"
-                            placeholder="Any extra info (optional)"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="btn btn-primary w-full tracking-wide font-semibold text-white"
-                    >
-                        Add Food
-                    </button>
-                </form>
-            </div>
+                </button>
+            </form>
         </div>
     );
-};
-
-export default AddFood;
+}
