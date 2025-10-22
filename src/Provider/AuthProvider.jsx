@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import auth from '../Firebase/firebase.init.js';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import auth from "../Firebase/firebase.init.js";
+import axios from "axios";
 import {
     createUserWithEmailAndPassword,
     GoogleAuthProvider,
     onAuthStateChanged,
     signInWithEmailAndPassword,
     signInWithPopup,
-    signOut
-} from 'firebase/auth';
-import AuthContext from './AuthContext.jsx';
+    signOut,
+} from "firebase/auth";
+import AuthContext from "./AuthContext.jsx";
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [userData, setUserData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [fetchError, setFetchError] = useState(null);
     const googleProvider = new GoogleAuthProvider();
 
     // Register new user
@@ -44,10 +45,12 @@ const AuthProvider = ({ children }) => {
     // Fetch users data from backend
     const fetchUsers = async () => {
         try {
-            const response = await axios.get('https://ass11github.vercel.app/users'); // Replace with your backend URL
-            setUserData(response.data);
+            const response = await axios.get("https://ass11github.vercel.app/users");
+            setUserData(response.data || []);
+            setFetchError(null);
         } catch (error) {
-            console.error('Failed to fetch users:', error);
+            console.error("Failed to fetch users:", error);
+
         }
     };
 
@@ -56,14 +59,9 @@ const AuthProvider = ({ children }) => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
-
-            if (currentUser) {
-                fetchUsers();
-            } else {
-                setUserData([]); // Clear user data on logout
-            }
+            if (currentUser) fetchUsers();
+            else setUserData([]);
         });
-
         return () => unsubscribe();
     }, []);
 
@@ -71,6 +69,7 @@ const AuthProvider = ({ children }) => {
         user,
         userData,
         loading,
+        fetchError,
         createUser,
         login,
         logout,
@@ -78,11 +77,7 @@ const AuthProvider = ({ children }) => {
         setUser,
     };
 
-    return (
-        <AuthContext.Provider value={authInfo}>
-            {children}
-        </AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;
