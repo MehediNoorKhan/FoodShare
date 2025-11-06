@@ -7,7 +7,8 @@ import {
 
 const Footer = () => {
     return (
-        <footer className="mt-20 bg-gradient-to-r from-emerald-200 via-emerald-100 to-emerald-200 text-gray-700">
+        <footer className="bg-gradient-to-r from-emerald-200 via-emerald-100 to-emerald-200 text-gray-700 mt-auto">
+
             <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-4 gap-6">
                 {/* Brand */}
                 <div>
