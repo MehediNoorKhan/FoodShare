@@ -18,7 +18,12 @@ const AvailableFoods = () => {
                 .get("https://ass11github.vercel.app/food", {
                     params: { search: searchTerm, sortOrder },
                 })
-                .then((res) => setFoods(res.data))
+                .then((res) => {
+                    const today = new Date();
+                    // ✅ Filter out expired foods on the frontend as backup
+                    const availableFoods = res.data.filter(food => new Date(food.expiredDateTime) > today);
+                    setFoods(availableFoods);
+                })
                 .catch((err) => console.error("Error fetching foods:", err))
                 .finally(() => setLoading(false));
         }, 500);
@@ -51,15 +56,9 @@ const AvailableFoods = () => {
                         onChange={(e) => setSortOrder(e.target.value)}
                         className="cursor-pointer input input-bordered w-full sm:w-auto"
                     >
-                        <option value="" disabled>
-                            Sort By
-                        </option>
-                        <option value="desc">
-                            Newest &#x25BC; {/* ▼ */}
-                        </option>
-                        <option value="asc">
-                            Oldest &#x25B2; {/* ▲ */}
-                        </option>
+                        <option value="" disabled>Sort By</option>
+                        <option value="desc">Newest &#x25BC;</option>
+                        <option value="asc">Oldest &#x25B2;</option>
                     </select>
 
                     <div className="inline-flex rounded-lg overflow-hidden border border-gray-400">
@@ -76,7 +75,6 @@ const AvailableFoods = () => {
                             2 Column View
                         </button>
                     </div>
-
                 </div>
             </div>
 

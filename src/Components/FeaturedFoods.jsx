@@ -1,98 +1,143 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router";
-import Loader from "./Loader";
-import { motion } from "framer-motion";
+import { Link } from "react-router";
+import "../FeaturedFoods.css";
 
 const FeaturedFoods = () => {
     const [featuredFoods, setFeaturedFoods] = useState([]);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
 
     useEffect(() => {
-        setLoading(true);
-
-        axios
-            .get("https://ass11github.vercel.app/featured-foods")
-            .then((res) => {
-                setFeaturedFoods(res.data);
-            })
-            .catch((err) => {
+        const fetchFoods = async () => {
+            try {
+                setLoading(true);
+                const res = await axios.get("https://ass11github.vercel.app/food");
+                setFeaturedFoods(res.data || []);
+            } catch (err) {
                 console.error("Error fetching featured foods:", err);
-            })
-            .finally(() => {
+                setFeaturedFoods([]); // fallback to empty array
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchFoods();
     }, []);
 
-    if (loading) return <Loader />;
+    const getRemainingDays = (expiredDateTime) => {
+        if (!expiredDateTime) return 0;
+        const today = new Date();
+        const exp = new Date(expiredDateTime);
 
-    if (featuredFoods.length === 0)
-        return (
-            <p className="text-center mt-10 text-gray-500">
-                No featured foods available.
-            </p>
-        );
+        const t = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const e = new Date(exp.getFullYear(), exp.getMonth(), exp.getDate());
+
+        const diffDays = Math.ceil((e - t) / (1000 * 60 * 60 * 24));
+        return diffDays > 0 ? diffDays : 0;
+    };
+
+    const validFoods = featuredFoods
+        .filter((food) => getRemainingDays(food.expiredDateTime) > 0)
+        .slice(0, 8);
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-8">
-            <h2 className="text-3xl font-bold mb-6 text-center text-indigo-700">
-                Featured Foods
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {featuredFoods.map((food) => (
-                    <motion.div
-                        key={food._id}
-                        className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                        viewport={{ once: true, amount: 0.3 }}
-                    >
-                        <img
-                            src={food.foodImage}
-                            alt={food.foodName}
-                            className="h-48 w-full object-cover"
-                            loading="lazy"
-                        />
-                        <div className="p-4 flex flex-col flex-grow">
-                            <h3 className="text-xl font-semibold mb-1">{food.foodName}</h3>
-                            <p className="text-gray-600 mb-1">
-                                <strong>Quantity:</strong> {food.foodQuantity}
-                            </p>
-                            <p className="text-gray-600 mb-3">
-                                <strong>Pickup Location:</strong> {food.pickupLocation}
-                            </p>
-                            <p className="text-gray-600 text-sm mt-auto">
-                                <strong>Expires:</strong>{" "}
-                                {new Date(food.expiredDateTime).toLocaleString(undefined, {
-                                    dateStyle: "medium",
-                                    timeStyle: "short",
-                                })}
-                            </p>
+        <section className="bg-green-50">
+            <div className="max-w-7xl mx-auto px-4 py-12">
+                <h2 className="text-3xl font-bold mb-8 text-center text-[#24725e]">
+                    Featured Foods
+                </h2>
 
-                            <div className="mt-4 flex justify-start">
-                                <Link
-                                    to={`/fooddetails/${food._id}`}
-                                    className="bg-green-400 text-white px-4 py-2 rounded-2xl hover:bg-green-700 transition"
-                                >
-                                    View Details
-                                </Link>
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    {loading
+                        ? Array(4)
+                            .fill(0)
+                            .map((_, idx) => (
+                                <div key={idx} className="card animate-pulse">
+                                    <div className="card__content">
+                                        <span className="card__badge bg-gray-300 text-transparent">
+                                            Loading
+                                        </span>
+                                        <div className="card__image bg-gray-300 h-40 w-full rounded-md" />
+                                        <p className="card__title bg-gray-300 text-transparent">
+                                            Loading
+                                        </p>
+                                        <p className="card__description bg-gray-300 text-transparent h-12 mt-2" />
+                                        <div className="card__footer">
+                                            <button className="card__button cursor-pointer bg-gray-300 text-transparent">
+                                                Loading
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        : validFoods.map((food) => (
+                            <div key={food._id} className="card">
+                                <div className="card__content">
+                                    <span className="card__badge">
+                                        {getRemainingDays(food.expiredDateTime)} days to be expired
+                                    </span>
+
+                                    <div className="card__image">
+                                        <img src={food.foodImage} alt={food.foodName} />
+                                    </div>
+
+                                    <p className="card__title">{food.foodName}</p>
+
+                                    <p className="card__description">
+                                        Quantity: {food.foodQuantity}
+                                        <br />
+                                        Pickup: {food.pickupLocation}
+                                    </p>
+
+                                    <div className="card__footer">
+                                        <Link to={`/fooddetails/${food._id}`}>
+                                            <button className="card__button cursor-pointer">
+                                                <span>View Details</span>
+                                            </button>
+                                        </Link>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
+                        ))}
+                </div>
 
-            <div className="text-center mt-8">
-                <button
-                    onClick={() => navigate("/availablefoods")}
-                    className="px-6 py-3 cursor-pointer bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition"
-                >
-                    Show All
-                </button>
+                {/* See More Button */}
+                <div className="flex justify-center mt-10">
+                    <Link to="/availablefoods">
+                        <button className="seemorebutton">
+                            <span className="button__icon-wrapper">
+                                <svg
+                                    viewBox="0 0 14 15"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="10"
+                                    className="button__icon-svg"
+                                >
+                                    <path
+                                        d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"
+                                        fill="currentColor"
+                                    ></path>
+                                </svg>
+
+                                <svg
+                                    viewBox="0 0 14 15"
+                                    fill="none"
+                                    width="10"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="button__icon-svg button__icon-svg--copy"
+                                >
+                                    <path
+                                        d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"
+                                        fill="currentColor"
+                                    ></path>
+                                </svg>
+                            </span>
+                            Explore All
+                        </button>
+                    </Link>
+                </div>
             </div>
-        </div>
+        </section>
     );
 };
 

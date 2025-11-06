@@ -41,32 +41,32 @@ const Banner = () => {
         return () => clearInterval(interval);
     }, []);
 
-    const { image, heading, subheading, buttonText, buttonLink } =
-        slides[current];
+    const { image, heading, subheading, buttonText, buttonLink } = slides[current];
 
     return (
         <div className="relative w-full h-[80vh]">
             <img src={image} alt="Slide" className="w-full h-full object-cover" />
 
             <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center text-white px-4">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
-                    {heading}
-                </h1>
+                <h1 className="text-5xl sm:text-2xl md:text-5xl font-bold mb-4">{heading}</h1>
                 <p className="text-lg md:text-2xl mb-6 max-w-2xl">{subheading}</p>
                 <Link
                     to={buttonLink}
-                    className="bg-emerald-500 hover:bg-emerald-600 px-6 py-3 rounded-full text-lg font-semibold shadow-lg transition"
+                    className="bg-[#22c55e] hover:bg-[#24725e] px-6 py-3 rounded-full text-lg font-semibold shadow-lg transition"
                 >
                     {buttonText}
                 </Link>
             </div>
 
+            {/* Slider Dots */}
             <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex space-x-2">
                 {slides.map((_, i) => (
                     <button
                         key={i}
                         onClick={() => setCurrent(i)}
-                        className={`w-3 h-3 rounded-full ${i === current ? "bg-white" : "bg-white/50"
+                        className={`rounded-full transition-all duration-300 ${i === current
+                            ? "w-6 h-3 bg-[#22c55e]" // active: wider and colorful
+                            : "w-3 h-3 bg-white/50" // inactive: small and semi-transparent
                             }`}
                     />
                 ))}
