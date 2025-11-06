@@ -7,8 +7,6 @@ import noDataAnimation from "../../assets/No-Data.json";
 import { CiCalendarDate } from "react-icons/ci";
 import { GoLocation } from "react-icons/go";
 import { MdOutlineInventory } from "react-icons/md";
-import Aos from "aos";
-import "aos/dist/aos.css";
 
 const AvailableFoods = () => {
     const [foods, setFoods] = useState([]);
@@ -18,9 +16,8 @@ const AvailableFoods = () => {
     const [dropdownActive, setDropdownActive] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const foodsPerPage = 12;
+    const foodsPerPage = 8;
 
-    // Fetch foods
     useEffect(() => {
         const delayDebounce = setTimeout(async () => {
             setLoading(true);
@@ -31,23 +28,19 @@ const AvailableFoods = () => {
 
                 let availableFoods = res.data;
 
-                // Remove expired foods
                 const today = new Date();
                 availableFoods = availableFoods.filter((food) => {
                     const exp = new Date(food.expiredDateTime);
                     return exp > today;
                 });
 
-                // Sorting
                 if (sortOrder === "asc") {
                     availableFoods.sort(
-                        (a, b) =>
-                            new Date(a.expiredDateTime) - new Date(b.expiredDateTime)
+                        (a, b) => new Date(a.expiredDateTime) - new Date(b.expiredDateTime)
                     );
                 } else if (sortOrder === "desc") {
                     availableFoods.sort(
-                        (a, b) =>
-                            new Date(b.expiredDateTime) - new Date(a.expiredDateTime)
+                        (a, b) => new Date(b.expiredDateTime) - new Date(a.expiredDateTime)
                     );
                 }
 
@@ -63,12 +56,6 @@ const AvailableFoods = () => {
         return () => clearTimeout(delayDebounce);
     }, [searchTerm, sortOrder]);
 
-    // Initialize AOS
-    useEffect(() => {
-        Aos.init({ duration: 800, easing: "ease-in-out", once: true });
-        Aos.refresh();
-    }, [foods, currentPage]);
-
     const getRemainingDays = (expiredDateTime) => {
         if (!expiredDateTime) return 0;
         const today = new Date();
@@ -77,7 +64,6 @@ const AvailableFoods = () => {
         return diffDays > 0 ? diffDays : 0;
     };
 
-    // Pagination
     const indexOfLastFood = currentPage * foodsPerPage;
     const indexOfFirstFood = indexOfLastFood - foodsPerPage;
     const currentFoods = foods.slice(indexOfFirstFood, indexOfLastFood);
@@ -163,93 +149,103 @@ const AvailableFoods = () => {
                         </p>
                     </div>
                 ) : (
-                    <>
-                        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                            {currentFoods.map((food, index) => (
-                                <div
-                                    key={food._id}
-                                    data-aos="fade-up"
-                                    data-aos-delay={index * 100} // staggered fade effect
-                                    className="card transform transition duration-300 hover:scale-[1.03] hover:shadow-2xl cursor-pointer"
-                                >
-                                    <div className="card__content relative">
-                                        <span className="absolute top-2 right-2 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md z-10">
-                                            Available
-                                        </span>
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        {currentFoods.map((food, index) => (
+                            <div
+                                key={food._id}
+                                className="card transform transition duration-300 hover:scale-[1.01] hover:shadow-2xl cursor-pointer flex flex-col justify-between"
+                            >
+                                <div className="card__content flex flex-col gap-4 p-4">
+                                    <span className="card__badge mb-2 text-sm text-white bg-[#22c55e] px-2 py-1 rounded-full">
+                                        {getRemainingDays(food.expiredDateTime)} days left
+                                    </span>
 
-                                        <span className="card__badge">
-                                            {getRemainingDays(food.expiredDateTime)} days left
-                                        </span>
-
-                                        <div className="card__image">
-                                            <img src={food.foodImage} alt={food.foodName} />
-                                        </div>
-
-                                        <p className="card__title">{food.foodName}</p>
-
-                                        <p className="card__description flex flex-col gap-1">
-                                            <span className="flex items-center gap-1">
-                                                <MdOutlineInventory className="text-green-500 w-5 h-5" />
-                                                <strong>Quantity:</strong> {food.foodQuantity}
-                                            </span>
-
-                                            <span className="flex items-center gap-1">
-                                                <GoLocation className="text-green-500 w-5 h-5" />
-                                                <strong>Pickup Location:</strong> {food.pickupLocation}
-                                            </span>
-
-                                            <span className="flex items-center gap-1">
-                                                <CiCalendarDate className="text-green-500 w-5 h-5" />
-                                                <strong>Expires:</strong>{" "}
-                                                {new Date(food.expiredDateTime).toLocaleString(undefined, {
-                                                    dateStyle: "medium",
-                                                    timeStyle: "short",
-                                                })}
-                                            </span>
-                                        </p>
-
-                                        {food.additionalNotes && (
-                                            <p className="card__description italic opacity-80">
-                                                {food.additionalNotes}
-                                            </p>
-                                        )}
+                                    {/* Food Image */}
+                                    <div className="card__image rounded-xl overflow-hidden">
+                                        <img
+                                            src={food.foodImage}
+                                            alt={food.foodName}
+                                            className="w-full h-40 object-cover"
+                                        />
                                     </div>
+
+                                    {/* Food Title */}
+                                    <p className="card__title text-lg font-bold text-gray-700">
+                                        {food.foodName}
+                                    </p>
+
+                                    {/* Food Details with Icons */}
+                                    <div className="card__description flex flex-col gap-2 text-gray-600">
+                                        <span className="flex items-center gap-1">
+                                            <MdOutlineInventory className="text-[#22c55e] w-5 h-5" />
+                                            <strong>Quantity:</strong> {food.foodQuantity}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <GoLocation className="text-[#22c55e] w-5 h-5" />
+                                            <strong>Pickup Location:</strong> {food.pickupLocation}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <CiCalendarDate className="text-[#22c55e] w-5 h-5" />
+                                            <strong>Expires:</strong>{" "}
+                                            {new Date(food.expiredDateTime).toLocaleString(undefined, {
+                                                dateStyle: "medium",
+                                                timeStyle: "short",
+                                            })}
+                                        </span>
+                                    </div>
+
+                                    {food.additionalNotes && (
+                                        <p className="card__description italic opacity-80">
+                                            {food.additionalNotes}
+                                        </p>
+                                    )}
                                 </div>
-                            ))}
-                        </div>
 
-                        {/* Pagination */}
-                        <div className="flex items-center justify-center gap-2 mt-10">
+                                {/* View Details Button fixed inside card */}
+                                <div className="card__footer flex justify-center pt-4 pb-6 mx-2">
+                                    <a href={`/fooddetails/${food._id}`} className="w-full">
+                                        <button className="card__button bg-[#22c55e] text-white rounded-full px-4 py-2 font-semibold hover:bg-green-600 cursor-pointer w-full">
+                                            View Details
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Pagination */}
+                {foods.length > foodsPerPage && (
+                    <div className="flex items-center justify-center gap-2 mt-10">
+                        <button
+                            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                            disabled={currentPage === 1}
+                            className="px-3 py-1 border cursor-pointer border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#22c55e] flex items-center gap-1"
+                        >
+                            Previous
+                        </button>
+
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                             <button
-                                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                                disabled={currentPage === 1}
-                                className="px-3 py-1 border cursor-pointer border-green-500 text-green-500 rounded hover:bg-green-500 hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-green-500 flex items-center gap-1"
+                                key={page}
+                                onClick={() => setCurrentPage(page)}
+                                className={`px-3 py-1 border border-[#22c55e] cursor-pointer rounded ${currentPage === page
+                                    ? "bg-[#22c55e] text-white"
+                                    : "text-[#22c55e] hover:bg-[#22c55e] hover:text-white"
+                                    }`}
                             >
-                                Previous
+                                {page}
                             </button>
+                        ))}
 
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                                <button
-                                    key={page}
-                                    onClick={() => setCurrentPage(page)}
-                                    className={`px-3 py-1 border border-green-500 cursor-pointer rounded ${currentPage === page
-                                            ? "bg-green-500 text-white"
-                                            : "text-green-500 hover:bg-green-500 hover:text-white"
-                                        }`}
-                                >
-                                    {page}
-                                </button>
-                            ))}
-
-                            <button
-                                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                                disabled={currentPage === totalPages}
-                                className="px-3 py-1 cursor-pointer border border-green-500 text-green-500 rounded hover:bg-green-500 hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-green-500 flex items-center gap-1"
-                            >
-                                Next
-                            </button>
-                        </div>
-                    </>
+                        <button
+                            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                            className="px-3 py-1 cursor-pointer border border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#22c55e] flex items-center gap-1"
+                        >
+                            Next
+                        </button>
+                    </div>
                 )}
             </div>
         </section>
