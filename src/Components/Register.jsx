@@ -45,7 +45,7 @@ const Register = () => {
             const userCredential = await createUser(email, password);
             const user = userCredential.user;
 
-            const res = await axios.post("https://ass11github.vercel.app/users", userinfos); // ✅ use your actual endpoint
+            const res = await axios.post("http://localhost:5000/users", userinfos); // ✅ use your actual endpoint
             if (res.data.insertedId) {
                 Swal.fire({
                     position: "top",

@@ -22,7 +22,7 @@ const AvailableFoods = () => {
         const delayDebounce = setTimeout(async () => {
             setLoading(true);
             try {
-                const res = await axios.get("https://ass11github.vercel.app/food", {
+                const res = await axios.get("http://localhost:5000/available-foods", {
                     params: { search: searchTerm },
                 });
 

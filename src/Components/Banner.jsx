@@ -9,7 +9,7 @@ const slides = [
         heading: "Share Food, Spread Love",
         subheading: "Donate your extra food to someone who needs it more.",
         buttonText: "Find Foods",
-        buttonLink: "/availablefoods",
+        buttonLink: "/availablefood",
     },
     {
         id: 2,

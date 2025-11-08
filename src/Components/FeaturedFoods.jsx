@@ -16,7 +16,7 @@ const FeaturedFoods = () => {
         const fetchFoods = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get("https://ass11github.vercel.app/food");
+                const res = await axios.get("http://localhost:5000/food");
                 setFeaturedFoods(res.data || []);
             } catch (err) {
                 console.error("Error fetching featured foods:", err);
@@ -141,7 +141,7 @@ const FeaturedFoods = () => {
 
                 {/* See More Button */}
                 <div className="flex justify-center mt-10">
-                    <Link to="/availablefoods">
+                    <Link to="/availablefood">
                         <button className="seemorebutton">
                             <span className="button__icon-wrapper">
                                 <svg

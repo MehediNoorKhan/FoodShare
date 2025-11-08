@@ -1,208 +1,182 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import useAuth from "../Hooks/useAuth";
 import axios from "axios";
-import { toast } from "react-toastify";
-import AuthContext from "../Provider/AuthContext";
+import Swal from "sweetalert2";
 
 const AddFood = () => {
-    const { user, userData, loading: authLoading, fetchError } = useContext(AuthContext);
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [imageUploading, setImageUploading] = useState(false);
+    const imageHostKey = import.meta.env.VITE_IMGBB_KEY;
 
-    const [currentUser, setCurrentUser] = useState(null);
-    const [postCount, setPostCount] = useState(0);
-    const [loading, setLoading] = useState(true);
-    const [formData, setFormData] = useState({
-        foodName: "",
-        foodImage: "",
-        foodQuantity: "",
-        pickupLocation: "",
-        expiredDateTime: "",
-        additionalNotes: "",
-    });
-
-    const maxPostsAllowed = 5;
-
-    // Fetch current user and post count
-    useEffect(() => {
-        if (!user || !userData) return;
-
-        const foundUser = userData.find((u) => u.email === user.email);
-        setCurrentUser(foundUser || null);
-
-        if (foundUser) {
-            setLoading(true);
-            axios
-                .get(`https://ass11github.vercel.app/food/count/${user.email}`)
-                .then((res) => setPostCount(res.data.count || 0))
-                .catch((err) => {
-                    console.error("Failed to fetch food count:", err);
-
-                })
-                .finally(() => setLoading(false));
-        } else {
-            setLoading(false);
-        }
-    }, [user, userData]);
-
-    const handleChange = (e) =>
-        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-
-    const handleSubmit = async (e) => {
+    const handleAddFood = async (e) => {
         e.preventDefault();
-        if (!currentUser) return;
+        setLoading(true);
 
-        const newFood = {
-            ...formData,
-            foodQuantity: Number(formData.foodQuantity),
-            donorName: currentUser.name,
-            donorEmail: currentUser.email,
-            donorImage: currentUser.photourl,
-            foodStatus: "available",
-        };
+        const form = e.target;
+        const foodName = form.foodName.value;
+        const quantity = form.quantity.value;
+        const pickupLocation = form.pickupLocation.value;
+        const expireDate = form.expireDate.value;
+        const additionalNotes = form.additionalNotes.value;
+        const imageFile = form.foodImage.files[0];
+
+        if (!imageFile) {
+            Swal.fire("Error", "Please select an image", "error");
+            setLoading(false);
+            return;
+        }
 
         try {
-            const res = await axios.post("https://ass11github.vercel.app/food", newFood);
-            if (res.data.insertedId) {
-                toast.success("Food added successfully!");
-                setFormData({
-                    foodName: "",
-                    foodImage: "",
-                    foodQuantity: "",
-                    pickupLocation: "",
-                    expiredDateTime: "",
-                    additionalNotes: "",
+            setImageUploading(true);
+
+            // Resize image for faster upload
+            const resizeImage = (file, maxWidth = 600, maxHeight = 600) => {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    const reader = new FileReader();
+
+                    reader.onload = (e) => (img.src = e.target.result);
+                    img.onload = () => {
+                        const canvas = document.createElement("canvas");
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height && width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        } else if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob((blob) => resolve(blob), file.type, 0.75);
+                    };
+                    reader.readAsDataURL(file);
                 });
-                setPostCount((prev) => prev + 1); // instant update
+            };
+
+            const resizedBlob = await resizeImage(imageFile);
+
+            const formData = new FormData();
+            formData.append("image", resizedBlob);
+
+            const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`;
+            const imgRes = await fetch(url, { method: "POST", body: formData });
+            const imgData = await imgRes.json();
+
+            setImageUploading(false);
+
+            if (!imgData.success) {
+                setLoading(false);
+                return;
             }
+
+            // SweetAlert2 success after image upload
+            await Swal.fire("Success!", "Image uploaded successfully 🎉", "success");
+
+            const foodData = {
+                foodName,
+                foodImage: imgData.data.url,
+                foodQuantity: Number(quantity),
+                pickupLocation,
+                expiredDateTime: expireDate,
+                additionalNotes,
+                donorName: user?.displayName,
+                donorEmail: user?.email,
+                foodStatus: "available",
+                createdAt: new Date(),
+            };
+
+            // Example: if your backend is on port 5000
+            await axios.post("http://localhost:5000/food", foodData);
+
+
+            Swal.fire("Added!", "Food added successfully ✅", "success");
+            navigate("/availablefood");
         } catch (err) {
             console.error(err);
-            toast.error("Failed to add food. Please try again.");
+            Swal.fire("Error", "Something went wrong", "error");
+        } finally {
+            setLoading(false);
+            setImageUploading(false);
         }
     };
 
-    // Wait until user, currentUser, and postCount are ready
-    if (authLoading || loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p>Loading your info...</p>
-            </div>
-        );
-    }
-
-    if (fetchError) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-red-600">{fetchError}</p>
-            </div>
-        );
-    }
-
-    if (!currentUser) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-red-600">There is no user</p>
-            </div>
-        );
-    }
-
-    const canPost = postCount < maxPostsAllowed || currentUser.membership === "yes";
-
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-indigo-100 flex items-center justify-center px-4 py-12">
-            <div className="w-full max-w-xl bg-white bg-opacity-90 shadow-2xl rounded-2xl p-8 backdrop-blur">
-                <h2 className="text-3xl font-bold text-center text-indigo-700 mb-8">Add Food</h2>
+        <div
+            className="min-h-screen relative flex items-center justify-center px-4 py-16 mt-16 bg-cover bg-center bg-no-repeat"
+            style={{
+                backgroundImage: "url('https://i.ibb.co/bgHJ1Mww/bgofweb.jpg')",
+            }}
+        >
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-                {canPost ? (
-                    <>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label className="block font-medium">Food Name</label>
-                                <input
-                                    type="text"
-                                    name="foodName"
-                                    value={formData.foodName}
-                                    onChange={handleChange}
-                                    required
-                                    className="input input-bordered w-full"
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Food Image URL</label>
-                                <input
-                                    type="text"
-                                    name="foodImage"
-                                    value={formData.foodImage}
-                                    onChange={handleChange}
-                                    required
-                                    className="input input-bordered w-full"
-                                    placeholder="Image URL"
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Food Quantity</label>
-                                <input
-                                    type="number"
-                                    name="foodQuantity"
-                                    value={formData.foodQuantity}
-                                    onChange={handleChange}
-                                    required
-                                    className="input input-bordered w-full"
-                                    placeholder="e.g., 5"
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Pickup Location</label>
-                                <input
-                                    type="text"
-                                    name="pickupLocation"
-                                    value={formData.pickupLocation}
-                                    onChange={handleChange}
-                                    required
-                                    className="input input-bordered w-full"
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Expired Date/Time</label>
-                                <input
-                                    type="datetime-local"
-                                    name="expiredDateTime"
-                                    value={formData.expiredDateTime}
-                                    onChange={handleChange}
-                                    required
-                                    className="input input-bordered w-full"
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Additional Notes</label>
-                                <textarea
-                                    name="additionalNotes"
-                                    value={formData.additionalNotes}
-                                    onChange={handleChange}
-                                    className="textarea textarea-bordered w-full"
-                                    placeholder="Any extra info (optional)"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="btn btn-primary w-full tracking-wide font-semibold text-white"
-                            >
-                                Add Food
-                            </button>
-                        </form>
-                    </>
-                ) : (
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-red-600 mb-4">Membership Required</h2>
-                        <p className="text-gray-700 mb-4">
-                            You have reached your allowed number of food posts ({postCount}/{maxPostsAllowed}).
-                        </p>
-                        <p className="text-gray-600 mb-4">Upgrade your membership to add more posts.</p>
-                        <button
-                            onClick={() => (window.location.href = "/membership")}
-                            className="bg-blue-600 text-white py-2 px-6 rounded-md font-semibold hover:bg-blue-700 transition"
-                        >
-                            Be a Member
-                        </button>
-                    </div>
-                )}
+            <div className="relative w-full max-w-md bg-white/10 border border-green-500 backdrop-blur-md rounded-2xl p-8 shadow-lg shadow-green-400/50">
+                <h2 className="text-3xl font-bold text-center text-green-300 mb-6">
+                    Add Food
+                </h2>
+
+                <form onSubmit={handleAddFood} className="space-y-4">
+                    <input
+                        type="text"
+                        name="foodName"
+                        required
+                        placeholder="Food Name"
+                        className="input input-bordered w-full border-green-500 bg-white/40 text-black"
+                    />
+                    <input
+                        type="number"
+                        name="quantity"
+                        required
+                        placeholder="Food Quantity"
+                        className="input input-bordered w-full border-green-500 bg-white/40 text-black"
+                    />
+                    <input
+                        type="text"
+                        name="pickupLocation"
+                        required
+                        placeholder="Pickup Location"
+                        className="input input-bordered w-full border-green-500 bg-white/40 text-black"
+                    />
+                    <input
+                        type="datetime-local"
+                        name="expireDate"
+                        required
+                        className="input input-bordered w-full border-green-500 bg-white/40 text-black"
+                    />
+
+                    <input
+                        type="file"
+                        name="foodImage"
+                        accept="image/*"
+                        required
+                        className="file-input file-input-bordered w-full border-green-500 bg-white/40 text-black"
+                        disabled={imageUploading}
+                    />
+
+                    <textarea
+                        name="additionalNotes"
+                        placeholder="Additional Notes (optional)"
+                        className="textarea textarea-bordered w-full border-green-500 bg-white/40 text-black"
+                    ></textarea>
+
+                    <button
+                        type="submit"
+                        disabled={loading || imageUploading}
+                        className={`btn w-full bg-green-500 hover:bg-green-600 text-white font-semibold ${loading || imageUploading ? "cursor-not-allowed opacity-60" : ""
+                            }`}
+                    >
+                        {loading || imageUploading ? "Uploading..." : "Add Food"}
+                    </button>
+                </form>
             </div>
         </div>
     );

@@ -21,7 +21,7 @@ const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
 
         setInitLoading(true);
         axios
-            .post("https://ass11github.vercel.app/create-payment-intent", { price })
+            .post("http://localhost:5000/create-payment-intent", { price })
             .then((res) => setClientSecret(res.data.clientSecret))
             .catch((err) => {
                 console.error("Error fetching client secret:", err);
@@ -59,7 +59,7 @@ const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
                 toast.success("Payment Successful 🎉");
 
                 // Update membership in backend
-                await axios.patch(`https://ass11github.vercel.app/users/membership/${user.email}`, {
+                await axios.patch(`http://localhost:5000/users/membership/${user.email}`, {
                     membership: "yes",
                 });
 

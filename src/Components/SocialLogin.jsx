@@ -22,7 +22,7 @@ const SocialLogin = ({ from }) => {
 
         // Save user info to MongoDB
         axios
-          .post("https://ass11github.vercel.app/users", userInfo)
+          .post("http://localhost:5000/users", userInfo)
           .then(() => {
             toast.success("Google login successful!");
             navigate(from || "/");

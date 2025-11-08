@@ -33,12 +33,12 @@ const FoodDetails = () => {
         };
 
         try {
-            await axios.patch(`https://ass11github.vercel.app/food/${food._id}`, {
+            await axios.patch(`http://localhost:5000/food/${food._id}`, {
                 foodStatus: "requested",
             });
 
             await axios.post(
-                "https://ass11github.vercel.app/requestedfoods",
+                "http://localhost:5000/requestedfoods",
                 requestData
             );
 
