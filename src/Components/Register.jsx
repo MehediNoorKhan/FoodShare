@@ -23,6 +23,7 @@ const Register = () => {
             name: rest.name,
             photourl: rest.photourl,
             membership: "no",
+            post: 0
         };
 
         const hasUppercase = /[A-Z]/.test(password);

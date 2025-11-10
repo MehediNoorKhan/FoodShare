@@ -7,12 +7,8 @@ import { useNavigate } from "react-router";
 import AuthContext from "../Provider/AuthContext.jsx";
 import { motion } from "framer-motion";
 import { FaEdit, FaTrash } from "react-icons/fa";
-
-const Spinner = () => (
-    <div className="flex justify-center items-center h-40">
-        <span className="loading loading-spinner loading-lg text-emerald-600"></span>
-    </div>
-);
+import { MdLocationOn, MdEvent } from "react-icons/md";
+import ManageFoodSkeleton from "../Skeletons/ManageFoodSkeleton.jsx";
 
 const ManageFood = () => {
     const navigate = useNavigate();
@@ -30,24 +26,43 @@ const ManageFood = () => {
         additionalNotes: "",
     });
 
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const foodsPerPage = 5;
+
     const { data: foods = [], isLoading } = useQuery({
         queryKey: ["manage-food", user?.email],
         enabled: !!user?.email,
         queryFn: async () => {
-            const res = await axiosSecure.get(`/manage-food?email=${user.email}`);
+            const res = await axiosSecure.get(`/food/user/${user.email}`);
             return res.data;
         },
     });
 
+    const totalPages = Math.ceil(foods.length / foodsPerPage);
+    const paginatedFoods = foods.slice(
+        (currentPage - 1) * foodsPerPage,
+        currentPage * foodsPerPage
+    );
+
     const deleteMutation = useMutation({
-        mutationFn: async (id) => await axiosSecure.delete(`/food/${id}`),
+        mutationFn: async (id) => {
+            const res = await axiosSecure.delete(`/food/${id}`);
+            return res.data;
+        },
         onSuccess: (_, id) => {
             toast.success("Food deleted successfully");
             queryClient.setQueryData(["manage-food", user.email], (old) =>
                 old.filter((item) => item._id !== id)
             );
         },
-        onError: () => toast.error("Failed to delete food"),
+        onError: (error) => {
+            if (error.response && error.response.data?.error) {
+                toast.error(error.response.data.error);
+            } else {
+                toast.error("Failed to delete food");
+            }
+        },
     });
 
     const updateMutation = useMutation({
@@ -103,129 +118,237 @@ const ManageFood = () => {
         updateMutation.mutate({ id: currentFood._id, updatedData: updateForm });
     };
 
-    if (isLoading) return <Spinner />;
+    if (isLoading) return <ManageFoodSkeleton />;
 
     return (
         <div className="max-w-7xl mx-auto p-20">
-            <h1 className="text-3xl font-bold mb-6 mt-8 text-center text-emerald-600">
+            <h1 className="text-3xl font-bold mb-16 mt-8 text-center text-emerald-600">
                 Manage Your Foods
             </h1>
 
             {foods.length === 0 ? (
-                <div className="text-center space-y-4">
-                    <p className="text-gray-500 text-lg">
-                        You haven't added any food yet.
-                    </p>
-                    <button
-                        onClick={() => navigate("/addfood")}
-                        className="inline-block cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded shadow transition duration-300"
-                    >
-                        Add Food
-                    </button>
-                </div>
+                <NoData
+                    message="You haven't added any Food yet"
+                    subMessage="You can 'Add Food' if you want."
+                    actionText="Add Food"
+                    onAction={() => navigate("/addfood")}
+                />
             ) : (
-                <div className="overflow-x-auto mt-6 rounded-lg shadow-lg border border-emerald-200">
-                    <table className="table w-full">
-                        <thead>
-                            <tr>
-                                <th>Food</th>
-                                <th>Quantity</th>
-                                <th>Pickup Location</th>
-                                <th>Expire Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {foods.map((food, index) => (
-                                <motion.tr
-                                    key={food._id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: index * 0.05 }}
-                                    className="bg-green-50 hover:bg-green-100 transition-all"
-                                >
-                                    <td>
-                                        <div className="flex items-center gap-3">
-                                            <div className="avatar">
-                                                <div className="mask mask-squircle h-12 w-12">
-                                                    <img src={food.foodImage} alt={food.foodName} />
+                <>
+                    <div className="overflow-x-auto mt-6 rounded-lg shadow-lg border border-emerald-200">
+                        <table className="table-auto w-full border border-emerald-200 rounded-lg overflow-hidden">
+                            <thead className="bg-emerald-100 text-emerald-700">
+                                <tr>
+                                    <th className="p-2 text-left pl-18">Food</th>
+                                    <th className="p-2 text-center">Quantity</th>
+                                    <th className="p-2 text-center">Pickup Location</th>
+                                    <th className="p-2 text-center">Expire Date</th>
+                                    <th className="p-2 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {paginatedFoods.map((food, index) => (
+                                    <motion.tr
+                                        key={food._id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.05 }}
+                                        className="bg-green-50 hover:bg-green-100 transition-all"
+                                    >
+                                        {/* Food Info */}
+                                        <td className="p-2 text-left">
+                                            <div className="flex items-center gap-3">
+                                                <div className="avatar">
+                                                    <div className="mask mask-squircle h-12 w-12">
+                                                        <img src={food.foodImage} alt={food.foodName} />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold">{food.foodName}</div>
+                                                    <div className="text-sm opacity-50">{food.donorName}</div>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <div className="font-bold">{food.foodName}</div>
-                                                <div className="text-sm opacity-50">{food.donorName}</div>
+                                        </td>
+
+                                        {/* Quantity */}
+                                        <td className="p-2 text-center font-medium">{food.foodQuantity}</td>
+
+                                        {/* Pickup Location */}
+                                        <td className="p-2 text-green-700 text-center font-medium">
+                                            <div className="flex items-center justify-center gap-1">
+                                                <MdLocationOn className="text-green-500" /> {food.pickupLocation}
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>{food.foodQuantity}</td>
-                                    <td>{food.pickupLocation}</td>
-                                    <td>
-                                        {new Date(food.expiredDateTime).toLocaleString("en-GB", {
-                                            day: "2-digit",
-                                            month: "2-digit",
-                                            year: "numeric",
-                                            hour: "numeric",
-                                            minute: "2-digit",
-                                            second: "2-digit",
-                                            hour12: true,
-                                        })}
-                                    </td>
-                                    <td className="flex gap-2">
-                                        <button
-                                            onClick={() => openUpdateModal(food)}
-                                            className="btn btn-ghost btn-xs bg-yellow-400 hover:bg-yellow-500 text-white flex items-center gap-1"
-                                        >
-                                            <FaEdit /> Update
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(food._id)}
-                                            disabled={deleteMutation.isLoading}
-                                            className="btn btn-ghost btn-xs bg-red-500 hover:bg-red-600 text-white flex items-center gap-1"
-                                        >
-                                            <FaTrash /> Delete
-                                        </button>
-                                    </td>
-                                </motion.tr>
+                                        </td>
+
+                                        {/* Expire Date */}
+                                        <td className="p-2 text-center text-green-700 font-medium">
+                                            <div className="flex items-center justify-center gap-1">
+                                                <MdEvent className="text-green-500" />
+                                                {new Date(food.expiredDateTime).toLocaleString("en-GB", {
+                                                    day: "2-digit",
+                                                    month: "2-digit",
+                                                    year: "numeric",
+                                                    hour: "numeric",
+                                                    minute: "2-digit",
+                                                    second: "2-digit",
+                                                    hour12: true,
+                                                })}
+                                            </div>
+                                        </td>
+
+                                        {/* Actions */}
+                                        <td className="p-2">
+                                            <div className="flex justify-center gap-2">
+                                                <button
+                                                    onClick={() => openUpdateModal(food)}
+                                                    className="btn btn-ghost btn-xs bg-yellow-400 hover:bg-yellow-500 text-white flex items-center gap-1"
+                                                >
+                                                    <FaEdit /> Update
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(food._id)}
+                                                    disabled={deleteMutation.isLoading}
+                                                    className="btn btn-ghost btn-xs bg-red-500 hover:bg-red-600 text-white flex items-center gap-1"
+                                                >
+                                                    <FaTrash /> Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </motion.tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Pagination */}
+                    {foods.length > foodsPerPage && (
+                        <div className="flex items-center justify-center gap-2 mt-10">
+                            <button
+                                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                                disabled={currentPage === 1}
+                                className="px-3 py-1 border cursor-pointer border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#22c55e] flex items-center gap-1"
+                            >
+                                Previous
+                            </button>
+
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                                <button
+                                    key={page}
+                                    onClick={() => setCurrentPage(page)}
+                                    className={`px-3 py-1 border border-[#22c55e] cursor-pointer rounded ${currentPage === page
+                                        ? "bg-[#22c55e] text-white"
+                                        : "text-[#22c55e] hover:bg-[#22c55e] hover:text-white"
+                                        }`}
+                                >
+                                    {page}
+                                </button>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
+
+                            <button
+                                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                                className="px-3 py-1 cursor-pointer border border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#22c55e] flex items-center gap-1"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    )}
+                </>
             )}
 
-            {/* Update Modal */}
             {showUpdateModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                    <div className="bg-green-50 p-6 rounded-lg shadow-lg w-full max-w-md">
-                        <h2 className="text-xl font-semibold mb-4 text-emerald-700">
+                <div className="fixed inset-0 backdrop-blur-sm bg-black/20 flex items-center justify-center z-50">
+                    <div className="bg-green-50 p-5 rounded-lg shadow-lg w-full max-w-md max-h-[75vh] overflow-y-auto relative">
+                        {/* Close button */}
+                        <button
+                            onClick={() => setShowUpdateModal(false)}
+                            className="absolute top-3 right-3 cursor-pointer text-white bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 flex items-center justify-center font-bold shadow-lg transition"
+                        >
+                            ×
+                        </button>
+
+                        <h2 className="text-xl font-semibold mb-3 text-emerald-700 text-center">
                             Update Food
                         </h2>
-                        <form onSubmit={handleUpdateSubmit} className="space-y-3">
-                            {[
-                                { label: "Food Name", name: "foodName", type: "text" },
-                                { label: "Image URL", name: "foodImage", type: "text" },
-                                { label: "Quantity", name: "foodQuantity", type: "number" },
-                                { label: "Pickup Location", name: "pickupLocation", type: "text" },
-                                {
-                                    label: "Expire Date/Time",
-                                    name: "expiredDateTime",
-                                    type: "datetime-local",
-                                    value: new Date(updateForm.expiredDateTime)
-                                        .toISOString()
-                                        .slice(0, 16),
-                                },
-                            ].map(({ label, name, type, value }) => (
-                                <label key={name} className="block">
-                                    <span className="text-sm font-medium">{label}</span>
-                                    <input
-                                        name={name}
-                                        type={type}
-                                        value={value ?? updateForm[name]}
-                                        onChange={handleUpdateChange}
-                                        required
-                                        className="input input-bordered w-full mt-1"
-                                    />
-                                </label>
-                            ))}
+
+                        {/* Food Image */}
+                        <div className="flex justify-center mb-3 relative">
+                            <img
+                                src={updateForm.foodImage}
+                                alt={updateForm.foodName}
+                                className="h-24 w-24 object-cover rounded-lg shadow-md cursor-pointer"
+                                onClick={() => document.getElementById("updateFoodImageInput").click()}
+                            />
+                            <input
+                                type="file"
+                                id="updateFoodImageInput"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        reader.onload = (event) => {
+                                            setUpdateForm((prev) => ({
+                                                ...prev,
+                                                foodImage: event.target.result
+                                            }));
+                                        };
+                                        reader.readAsDataURL(file);
+                                    }
+                                }}
+                            />
+                        </div>
+
+                        <form onSubmit={handleUpdateSubmit} className="space-y-2">
+                            <label className="block">
+                                <span className="text-sm font-medium">Food Name</span>
+                                <input
+                                    name="foodName"
+                                    type="text"
+                                    value={updateForm.foodName}
+                                    onChange={handleUpdateChange}
+                                    required
+                                    className="input input-bordered w-full mt-1"
+                                />
+                            </label>
+
+                            <label className="block">
+                                <span className="text-sm font-medium">Quantity</span>
+                                <input
+                                    name="foodQuantity"
+                                    type="number"
+                                    value={updateForm.foodQuantity}
+                                    onChange={handleUpdateChange}
+                                    required
+                                    className="input input-bordered w-full mt-1"
+                                />
+                            </label>
+
+                            <label className="block">
+                                <span className="text-sm font-medium">Pickup Location</span>
+                                <input
+                                    name="pickupLocation"
+                                    type="text"
+                                    value={updateForm.pickupLocation}
+                                    onChange={handleUpdateChange}
+                                    required
+                                    className="input input-bordered w-full mt-1"
+                                />
+                            </label>
+
+                            <label className="block">
+                                <span className="text-sm font-medium">Expire Date/Time</span>
+                                <input
+                                    name="expiredDateTime"
+                                    type="datetime-local"
+                                    value={new Date(updateForm.expiredDateTime).toISOString().slice(0, 16)}
+                                    onChange={handleUpdateChange}
+                                    required
+                                    className="input input-bordered w-full mt-1"
+                                />
+                            </label>
+
                             <label className="block">
                                 <span className="text-sm font-medium">Additional Notes</span>
                                 <textarea
@@ -235,17 +358,11 @@ const ManageFood = () => {
                                     className="textarea textarea-bordered w-full mt-1"
                                 />
                             </label>
-                            <div className="flex justify-end space-x-3 mt-4">
-                                <button
-                                    type="button"
-                                    className="btn btn-outline flex items-center gap-1"
-                                    onClick={() => setShowUpdateModal(false)}
-                                >
-                                    Cancel
-                                </button>
+
+                            <div className="flex justify-center mt-3">
                                 <button
                                     type="submit"
-                                    className="btn btn-primary flex items-center gap-1"
+                                    className="bg-[#22c55e] hover:bg-[#24725e] px-6 py-3 text-white rounded-full text-lg font-semibold shadow-lg transition flex items-center gap-2"
                                     disabled={updateMutation.isLoading}
                                 >
                                     <FaEdit /> Update

@@ -14,7 +14,7 @@ const PrivateRoute = ({ children }) => {
     }, [location.pathname, user]);
 
     if (loading) {
-        return <Loader />;
+        return <Loader></Loader>;
     }
 
     if (!user) {
