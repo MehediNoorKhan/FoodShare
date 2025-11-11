@@ -59,21 +59,23 @@ const Header = () => {
                                 to={link.to}
                                 className={({ isActive }) =>
                                     `relative group transition-colors duration-300 ${isActive
-                                        ? "text-white font-semibold underline"
+                                        ? scrolled
+                                            ? "text-green-500 font-semibold underline" // Active & scrolled: green
+                                            : "text-white font-semibold underline"     // Active & not scrolled: white
                                         : scrolled
-                                            ? "text-gray-500 hover:text-[#24725e]"
-                                            : "text-white hover:text-gray-200"
+                                            ? "text-gray-500 hover:text-green-500"    // Inactive & scrolled
+                                            : "text-white hover:text-gray-500"        // Inactive & not scrolled
                                     }`
                                 }
                             >
                                 {link.label}
                                 <span
-                                    className={`absolute left-0 bottom-0 h-0.5 w-0 transition-all duration-300 group-hover:w-full ${scrolled ? "bg-[#24725e]" : "bg-white"
-                                        }`}
+                                    className={`absolute left-0 bottom-0 h-0.5 w-0 transition-all duration-300 group-hover:w-full ${scrolled ? "bg-[#24725e]" : "bg-white"}`}
                                 />
                             </NavLink>
                         ))}
                     </nav>
+
 
                     <div className="flex items-center z-50 mr-4">
                         {user ? (
