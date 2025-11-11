@@ -156,7 +156,7 @@ const Membership = () => {
         return (
             <BackgroundWrapper>
                 <motion.div
-                    className="flex flex-col items-center justify-center relative"
+                    className="flex flex-col items-center justify-center relative lg:pt-0"
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.5 }}
@@ -164,9 +164,9 @@ const Membership = () => {
                     <img
                         src={alreadyMember}
                         alt="Already a member"
-                        className="max-w-full w-[250px] sm:w-[300px] md:w-[400px] rounded-lg mb-8"
+                        className="max-w-full w-[250px] sm:w-[300px] md:w-[400px] rounded-lg mb-8 pt-32 lg:pt-8"
                     />
-                    <div className="absolute -top-12 transform -translate-y-1/2">
+                    <div className="absolute top-20 lg:-top-4  transform -translate-y-1/2">
                         <Lottie loop animationData={successAnimation} style={{ width: 180, height: 180 }} />
                     </div>
                 </motion.div>

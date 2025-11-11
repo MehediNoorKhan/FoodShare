@@ -112,7 +112,7 @@ const ManageFood = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-10 sm:py-14">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-8 mb-10 text-center text-emerald-600">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-12 mb-10 text-center text-emerald-600">
                 Manage Your Foods
             </h1>
 
@@ -128,12 +128,12 @@ const ManageFood = () => {
                     <div className="overflow-x-auto rounded-lg shadow-lg border border-emerald-200">
                         <table className="table-auto w-full border-collapse border border-emerald-200">
                             <thead className="bg-emerald-100 text-emerald-700">
-                                <tr>
-                                    <th className="p-2 text-left">Food</th>
-                                    <th className="p-2 text-center">Quantity</th>
-                                    <th className="p-2 text-center">Pickup Location</th>
-                                    <th className="p-2 text-center">Expire Date</th>
-                                    <th className="p-2 text-center">Actions</th>
+                                <tr className="space-x-2">
+                                    <th className="p-4 md:p-2 text-left">Food</th>
+                                    <th className="p-4 md:p-2 text-center">Quantity</th>
+                                    <th className="p-4 md:p-2 text-center">Pickup Location</th>
+                                    <th className="p-4 md:p-2 text-center">Expire Date</th>
+                                    <th className="p-4 md:p-2 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -144,9 +144,9 @@ const ManageFood = () => {
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={{ once: true }}
                                         transition={{ delay: index * 0.05 }}
-                                        className="bg-green-50 hover:bg-green-100 transition-all"
+                                        className="bg-green-50 hover:bg-green-100 transition-all p-4 md:p-2"
                                     >
-                                        <td className="p-2">
+                                        <td className="p-4 md:p-2">
                                             <div className="flex items-center gap-2 sm:gap-3">
                                                 <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-md overflow-hidden flex-shrink-0">
                                                     <img src={food.foodImage} alt={food.foodName} className="w-full h-full object-cover" />
@@ -157,21 +157,26 @@ const ManageFood = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="p-2 text-center font-medium">{food.foodQuantity}</td>
-                                        <td className="p-2 text-green-700 text-center font-medium flex items-center justify-center gap-1">
-                                            <MdLocationOn className="text-green-500" /> {food.pickupLocation}
+                                        <td className="p-4 md:p-2 text-center font-medium">{food.foodQuantity}</td>
+                                        <td className="p-4 md:p-2 text-green-700 text-center font-medium">
+                                            <div className="flex items-center justify-center gap-1">
+                                                <MdLocationOn className="text-green-500" /> {food.pickupLocation}
+                                            </div>
+
                                         </td>
-                                        <td className="p-2 text-green-700 text-center font-medium flex items-center justify-center gap-1">
-                                            <MdEvent className="text-green-500" />
-                                            {new Date(food.expiredDateTime).toLocaleString("en-GB", {
-                                                day: "2-digit",
-                                                month: "2-digit",
-                                                year: "numeric",
-                                                hour: "numeric",
-                                                minute: "2-digit",
-                                            })}
+                                        <td className="p-4 md:p-2 text-green-700 text-center font-medium gap-1">
+                                            <div className="flex items-center justify-center">
+                                                <MdEvent className="text-green-500" />
+                                                {new Date(food.expiredDateTime).toLocaleString("en-GB", {
+                                                    day: "2-digit",
+                                                    month: "2-digit",
+                                                    year: "numeric",
+                                                    hour: "numeric",
+                                                    minute: "2-digit",
+                                                })}
+                                            </div>
                                         </td>
-                                        <td className="p-2 text-center">
+                                        <td className="p-4 md:p-2 text-center">
                                             <div className="flex flex-col sm:flex-row justify-center gap-2">
                                                 <button
                                                     onClick={() => openUpdateModal(food)}

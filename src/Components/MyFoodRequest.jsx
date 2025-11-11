@@ -124,12 +124,12 @@ const MyFoodRequest = () => {
                         <table className="table-auto w-full border border-emerald-200 rounded-lg overflow-hidden text-sm sm:text-base">
                             <thead className="bg-emerald-100 text-emerald-700">
                                 <tr>
-                                    <th className="p-2 text-left pl-3 sm:pl-6">Food</th>
-                                    <th className="p-2 text-center hidden sm:table-cell">Donor</th>
-                                    <th className="p-2 text-center">Pickup</th>
-                                    <th className="p-2 text-center">Expire</th>
-                                    <th className="p-2 text-center hidden sm:table-cell">Qty</th>
-                                    <th className="p-2 text-center">Action</th>
+                                    <th className="p-4 md:p-2 text-left pl-3 sm:pl-6">Food</th>
+                                    <th className="p-4 md:p-2 text-center hidden sm:table-cell">Donor</th>
+                                    <th className="p-4 md:p-2 text-center">Pickup</th>
+                                    <th className="p-4 md:p-2 text-center">Expire</th>
+                                    <th className="p-4 md:p-2 text-center hidden sm:table-cell">Qty</th>
+                                    <th className="p-4 md:p-2 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -140,9 +140,9 @@ const MyFoodRequest = () => {
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={{ once: true }}
                                         transition={{ delay: index * 0.05 }}
-                                        className="bg-green-50 hover:bg-green-100 transition-all"
+                                        className="bg-green-50 hover:bg-green-100 transition-all p-4 md:p-2"
                                     >
-                                        <td className="p-2 text-left">
+                                        <td className="p-4 md:p-2 text-left">
                                             <div className="flex items-center gap-2 sm:gap-3">
                                                 <div className="avatar">
                                                     <div className="mask mask-squircle h-10 w-10 sm:h-12 sm:w-12">
@@ -152,14 +152,14 @@ const MyFoodRequest = () => {
                                                 <div className="text-sm sm:text-base font-bold">{food.foodName}</div>
                                             </div>
                                         </td>
-                                        <td className="p-2 text-center font-medium hidden sm:table-cell">{food.foodDonatorName}</td>
-                                        <td className="p-2 text-center text-green-700 font-medium">
+                                        <td className="p-4 md:p-2 text-center font-medium hidden sm:table-cell">{food.foodDonatorName}</td>
+                                        <td className="p-4 md:p-2 text-center text-green-700 font-medium">
                                             <div className="flex items-center justify-center gap-1">
                                                 <MdLocationOn className="text-green-500" />
                                                 {food.pickupLocation}
                                             </div>
                                         </td>
-                                        <td className="p-2 text-center text-green-700 font-medium">
+                                        <td className="p-4 md:p-2 text-center text-green-700 font-medium">
                                             <div className="flex items-center justify-center gap-1">
                                                 <MdEvent className="text-green-500" />
                                                 {new Date(food.expireDate).toLocaleString("en-GB", {
@@ -173,8 +173,8 @@ const MyFoodRequest = () => {
                                                 })}
                                             </div>
                                         </td>
-                                        <td className="p-2 text-center font-medium hidden sm:table-cell">{food.requestedQuantity}</td>
-                                        <td className="p-2 text-center">
+                                        <td className="p-4 md:p-2 text-center font-medium hidden sm:table-cell">{food.requestedQuantity}</td>
+                                        <td className="p-4 md:p-2 text-center">
                                             <button
                                                 onClick={() => handleCancel(food._id)}
                                                 className="btn btn-ghost btn-xs bg-red-500 hover:bg-red-600 text-white flex items-center gap-1 mx-auto"

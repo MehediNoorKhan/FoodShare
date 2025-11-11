@@ -7,9 +7,10 @@ import { CiCalendarDate } from "react-icons/ci";
 import { GoLocation } from "react-icons/go";
 import { MdOutlineInventory } from "react-icons/md";
 import { FaUserAlt, FaTimes } from "react-icons/fa";
-import NoData from "../../assets/No-Data.json"; // Lottie animation
 import Lottie from "lottie-react";
+import NoData from "../../assets/No-Data.json";
 import { motion } from "framer-motion";
+import FoodDetailsSkeleton from "../Skeletons/FoodDetailsSkeelton";
 
 const FoodDetails = () => {
     const food = useLoaderData();
@@ -20,16 +21,15 @@ const FoodDetails = () => {
     const [requestQuantity, setRequestQuantity] = useState(1);
     const [loading, setLoading] = useState(true);
 
-    // Skeleton loading simulation
     useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 1200);
+        const timer = setTimeout(() => setLoading(false), 1000);
         return () => clearTimeout(timer);
     }, []);
 
     if (!food && !loading) {
         return (
             <div className="flex justify-center items-center mt-20">
-                <Lottie animationData={NoData} loop={true} style={{ width: 300 }} />
+                <Lottie animationData={NoData} loop style={{ width: 300 }} />
             </div>
         );
     }
@@ -37,185 +37,157 @@ const FoodDetails = () => {
     const handleRequest = async () => {
         const requestData = {
             foodId: food._id,
-            userEmail: user?.email || "",
+            userEmail: user?.email,
             requestedQuantity: requestQuantity,
             additionalNotes,
         };
 
         try {
-            const response = await axios.post("http://localhost:5000/requestfoods", requestData);
-            if (response.data.success) {
+            const res = await axios.post("http://localhost:5000/requestfoods", requestData);
+            if (res.data.success) {
                 Swal.fire({
                     icon: "success",
-                    title: "Request Submitted",
-                    text: response.data.message,
+                    title: "Request Submitted!",
+                    text: res.data.message,
                 });
                 setShowModal(false);
             } else {
                 Swal.fire({
                     icon: "error",
                     title: "Request Failed",
-                    text: response.data.message,
+                    text: res.data.message,
                 });
             }
-        } catch (error) {
-            console.error("Request error:", error);
+        } catch {
             Swal.fire({
                 icon: "error",
-                title: "Request Failed",
-                text: "Something went wrong. Please try again later.",
+                title: "Error",
+                text: "Something went wrong. Try again.",
             });
         }
     };
 
     return (
-        <div className="relative min-h-screen flex flex-col items-center justify-center p-4 md:p-8 lg:p-28 mt-16">
-            {loading ? (
-                // Skeleton Loader
-                <div className="w-full max-w-md bg-white/20 backdrop-blur-md rounded-xl shadow-lg p-6 flex flex-col gap-4 animate-pulse">
-                    <div className="w-full h-48 bg-gray-300 rounded-lg mb-4"></div>
-                    <div className="h-6 bg-gray-300 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-300 rounded w-full"></div>
-                    <div className="h-4 bg-gray-300 rounded w-full"></div>
-                    <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-                    <div className="h-10 bg-gray-300 rounded mt-4"></div>
-                </div>
-            ) : (
+        <div
+            className="relative min-h-screen flex flex-col items-center justify-center p-4 md:p-8 lg:p-28 mt-16 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${food?.foodImage})` }}
+        >
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+            {loading ? <FoodDetailsSkeleton></FoodDetailsSkeleton> : (
                 <motion.div
-                    className="relative z-10 w-full max-w-md bg-white/20 backdrop-blur-md rounded-xl shadow-lg p-6 md:p-8 flex flex-col gap-4 cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-3xl"
-                    initial={{ opacity: 0, y: 20 }}
+                    className="relative z-10 w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-xl p-6 md:p-8 flex flex-col gap-4 transition duration-300 hover:shadow-xl"
+                    initial={{ opacity: 0, y: 25 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                 >
                     <div className="w-full h-48 overflow-hidden rounded-lg">
-                        <img
-                            src={food.foodImage}
-                            alt={food.foodName}
-                            className="w-full h-full object-cover"
-                        />
+                        <img src={food.foodImage} alt={food.foodName} className="w-full h-full object-cover" />
                     </div>
 
-                    <p className="text-2xl font-bold text-white">{food.foodName}</p>
+                    <p className="text-2xl font-bold text-green-400">{food.foodName}</p>
 
-                    <p className="flex items-center gap-2 text-white">
-                        <MdOutlineInventory className="text-green-200 w-5 h-5" />
-                        <strong>Quantity:</strong> {food.foodQuantity}
+                    <p className="flex items-center gap-2 text-gray-200">
+                        <MdOutlineInventory className="text-green-400 w-5 h-5" />
+                        <strong className="text-gray-300">Quantity:</strong> {food.foodQuantity}
                     </p>
 
-                    <p className="flex items-center gap-2 text-white">
-                        <GoLocation className="text-green-200 w-5 h-5" />
-                        <strong>Pickup Location:</strong> {food.pickupLocation}
+                    <p className="flex items-center gap-2 text-gray-200">
+                        <GoLocation className="text-green-400 w-5 h-5" />
+                        <strong className="text-gray-300">Pickup Location:</strong> {food.pickupLocation}
                     </p>
 
-                    <p className="flex items-center gap-2 text-white">
-                        <CiCalendarDate className="text-green-200 w-5 h-5" />
-                        <strong>Expires:</strong>{" "}
-                        {new Date(food.expiredDateTime).toLocaleString(undefined, {
-                            dateStyle: "medium",
-                            timeStyle: "short",
-                        })}
+                    <p className="flex items-center gap-2 text-gray-200">
+                        <CiCalendarDate className="text-green-400 w-5 h-5" />
+                        <strong className="text-gray-300">Expires:</strong>{" "}
+                        {new Date(food.expiredDateTime).toLocaleString()}
                     </p>
 
-                    <p className="flex items-center gap-2 text-white">
-                        <FaUserAlt className="text-green-200 w-5 h-5" />
-                        <strong>Donated by:</strong> {food.donorName}
+                    <p className="flex items-center gap-2 text-gray-200">
+                        <FaUserAlt className="text-green-400 w-5 h-5" />
+                        <strong className="text-gray-300">Donated by:</strong> {food.donorName}
                     </p>
 
                     {food.additionalNotes && (
-                        <p className="text-white/90 italic">{food.additionalNotes}</p>
+                        <p className="text-gray-300 italic">"{food.additionalNotes}"</p>
                     )}
 
                     <button
                         onClick={() => setShowModal(true)}
-                        className="mt-4 bg-green-500 cursor-pointer text-white px-5 py-3 rounded hover:bg-green-600 transition-all duration-300"
+                        className="mt-4 bg-lightgreen text-white px-5 py-3 rounded-lg hover:bg-lightgreen shadow-md transition-all"
                     >
                         Request
                     </button>
                 </motion.div>
             )}
 
+            {/* --- Responsive Scrollable Modal --- */}
             {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center px-4 pt-36 md:pt-36 lg:pt-2">
                     <div
-                        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+                        className="absolute inset-0 bg-transparent backdrop-blur-sm"
                         onClick={() => setShowModal(false)}
                     ></div>
 
                     <motion.div
-                        className="relative z-10 w-full max-w-lg bg-green-100 rounded-xl shadow-lg p-4 flex flex-col gap-3 mx-auto"
+                        className="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto bg-green-100 rounded-xl p-5 lg:mt-16 sm:p-6 shadow-xl"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
                     >
                         <button
                             onClick={() => setShowModal(false)}
-                            className="cursor-pointer absolute top-3 right-3 text-red-500 hover:text-red-700"
+                            className="absolute top-3 right-3 text-red-500 hover:text-red-700"
                         >
                             <FaTimes className="w-6 h-6" />
                         </button>
 
-                        <h2 className="text-xl font-bold text-green-800 text-start mt-2">
-                            Request Food
-                        </h2>
+                        <h2 className="text-xl font-bold text-deepgreen mt-2">Request Food</h2>
 
-                        <div className="w-36 h-36 mx-auto rounded-xl mt-2 overflow-hidden">
-                            <img
-                                src={food.foodImage}
-                                alt={food.foodName}
-                                className="w-full h-full rounded-full object-cover"
-                            />
+                        <div className="w-32 h-32 mx-auto rounded-xl overflow-hidden my-3">
+                            <img src={food.foodImage} className="w-full h-full object-cover" />
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-green-900">
-                            <p className="flex items-center gap-2">
-                                <MdOutlineInventory className="w-5 h-5 font-semibold" /> {food.foodName}
-                            </p>
-                            <p className="flex items-center gap-2">
-                                <GoLocation className="w-5 h-5" /> Pickup: {food.pickupLocation}
-                            </p>
-                            <p className="flex items-center gap-2">
-                                <CiCalendarDate className="w-5 h-5" /> Expires:{" "}
-                                {new Date(food.expiredDateTime).toLocaleString()}
-                            </p>
-                            <p className="flex items-center gap-2">
-                                <FaUserAlt className="w-5 h-5" /> Donated by: {food.donorName}
-                            </p>
+                        <div className="flex justify-between gap-3 lg:gap-6 md:gap-4 text-deepgreen my-2">
+                            <p className="flex flex-inline justify-center items-center gap-1"><MdOutlineInventory /> {food.foodName}</p>
+                            <p className="flex flex-inline justify-center items-center gap-1"><GoLocation /> {food.pickupLocation}</p>
+
+                        </div>
+                        <div className="flex justify-between flex-wrap gap-3 lg:gap-6 md:gap-4 text-deepgreen my-2">
+
+                            <p className="flex flex-inline justify-center items-center gap-1"><CiCalendarDate /> {new Date(food.expiredDateTime).toLocaleString()}</p>
+                            <p className="flex flex-inline justify-center items-center gap-1"><FaUserAlt /> {food.donorName}</p>
                         </div>
 
-                        <label className="block text-green-900 mt-2">
-                            Quantity to Request
+                        <label className="block text-deepgreen mt-3">
+                            Quantity
                             <select
                                 value={requestQuantity}
                                 onChange={(e) => setRequestQuantity(Number(e.target.value))}
-                                className="select select-bordered w-full mt-1 bg-white/30 text-green-900"
+                                className="select select-bordered w-full bg-white"
                             >
                                 {Array.from({ length: food.foodQuantity }, (_, i) => i + 1).map((qty) => (
-                                    <option key={qty} value={qty}>
-                                        {qty}
-                                    </option>
+                                    <option key={qty} value={qty}>{qty}</option>
                                 ))}
                             </select>
                         </label>
 
-                        <label className="block text-green-900 mt-2">
-                            Additional Notes
+                        <label className="block text-deepgreen mt-3">
+                            Notes
                             <textarea
-                                className="textarea textarea-bordered w-full bg-white/30 text-green-900"
+                                className="textarea textarea-bordered w-full bg-white"
                                 rows={2}
                                 value={additionalNotes}
                                 onChange={(e) => setAdditionalNotes(e.target.value)}
-                                placeholder="Add any notes here..."
                             />
                         </label>
 
-                        <div className="flex justify-center mt-3">
-                            <button
-                                onClick={handleRequest}
-                                className="px-6 py-2 cursor-pointer bg-white text-green-600 font-semibold rounded hover:bg-white/90 transition"
-                            >
-                                Request
-                            </button>
-                        </div>
+                        <button
+                            onClick={handleRequest}
+                            className="px-6 py-2 bg-lightgreen text-white font-semibold rounded hover:bg-green-700 transition mt-4 w-full"
+                        >
+                            Submit Request
+                        </button>
                     </motion.div>
                 </div>
             )}

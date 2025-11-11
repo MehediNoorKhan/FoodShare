@@ -163,7 +163,7 @@ const Register = () => {
     if (loading || imageLoading) return <RegisterSkeleton />;
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-2 py-12 sm:py-24">
+        <div className="min-h-screen flex items-center justify-center px-2 py-12 mt-12 sm:py-24">
             <motion.div
                 id="register-form"
                 className="flex flex-col lg:flex-row lg:justify-center lg:items-center w-full max-w-6xl mx-auto rounded-lg overflow-hidden gap-8"
@@ -173,25 +173,25 @@ const Register = () => {
             >
                 {/* Left: Form */}
                 <div className="w-full lg:w-1/2 p-6 sm:p-8 flex flex-col justify-center bg-green-50 rounded-xl">
-                    <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center text-gray-700">
+                    <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center text-deepgreen">
                         Register Now!
                     </h1>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="label">Name</label>
-                            <input type="text" name="name" className="input input-bordered w-full" placeholder="Your Name" required />
+                            <label className="label text-deepgreen">Name</label>
+                            <input type="text" name="name" className="input input-bordered w-full text-lightgreen" placeholder="Your Name" required />
                         </div>
                         <div>
-                            <label className="label">Email</label>
-                            <input type="email" name="email" className="input input-bordered w-full" placeholder="Email" required />
+                            <label className="label text-deepgreen">Email</label>
+                            <input type="email" name="email" className="input input-bordered w-full text-lightgreen" placeholder="Email" required />
                         </div>
                         <div>
                             <label className="label">Photo</label>
                             <input type="file" accept="image/*" onChange={handleImageChange} className="input input-bordered w-full cursor-pointer" required />
                         </div>
                         <div>
-                            <label className="label">Password</label>
-                            <input type="password" name="password" className="input input-bordered w-full" placeholder="Password" required />
+                            <label className="label text-deepgreen">Password</label>
+                            <input type="password" name="password" className="input input-bordered text-lightgreen w-full" placeholder="Password" required />
                         </div>
 
                         {ermsg && <p className="text-red-500 mt-1">{ermsg}</p>}
@@ -206,7 +206,7 @@ const Register = () => {
                     </form>
 
                     <div className="text-sm mt-4 text-center sm:text-left">
-                        Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
+                        Already have an account?  <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
                     </div>
 
                     <div className="mt-6">

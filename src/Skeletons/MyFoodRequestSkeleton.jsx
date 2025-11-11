@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-const MyFoodRequestSkeleton = ({ rows}) => {
+const MyFoodRequestSkeleton = ({ rows }) => {
     const items = Array.from({ length: rows });
 
     return (

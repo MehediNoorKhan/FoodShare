@@ -74,11 +74,11 @@ const Banner = () => {
                         data-aos="fade-up"
                         className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center text-white px-4"
                     >
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
+                        <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
                             {heading}
                         </h1>
 
-                        <p className="text-sm sm:text-base md:text-xl mb-6 max-w-xl md:max-w-2xl">
+                        <p className="text-xs sm:text-sm md:text-lg lg:text-xl mb-6 max-w-xl md:max-w-2xl">
                             {subheading}
                         </p>
 
@@ -89,6 +89,7 @@ const Banner = () => {
                             {buttonText}
                         </Link>
                     </div>
+
                 </>
             )}
 

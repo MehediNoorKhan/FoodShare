@@ -36,7 +36,7 @@ export default function ContactForm() {
                     Contact Us
                 </h2>
 
-                <div className="contact-container flex flex-col md:flex-row gap-8 md:gap-10">
+                <div className="contact-container flex flex-col md:flex-row md:gap-10">
 
                     {/* Left Image or Skeleton */}
                     <div data-aos="fade-right" className="contact-image flex-1">
@@ -54,10 +54,10 @@ export default function ContactForm() {
                     {/* Right Form */}
                     <div
                         data-aos="fade-left"
-                        className="contact-form-wrapper bg-green-50 flex-1 p-6 md:p-8 rounded shadow-sm"
+                        className="contact-form-wrapper bg-green-50 flex flex-col justify-center items-center p-6 md:p-8 md:gap-4 rounded shadow-sm"
                     >
                         {/* Social Icons */}
-                        <div className="social-icons flex justify-center gap-4 mb-6 flex-wrap">
+                        <div className="social-icons flex justify-around items-center gap-4 mb-6">
                             {/* Instagram */}
                             <a
                                 href="https://www.instagram.com/cristiano/"

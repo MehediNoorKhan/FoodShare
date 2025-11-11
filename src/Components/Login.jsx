@@ -36,16 +36,16 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-green-50">
+        <div className="min-h-screen flex items-center justify-center px-4 mt-12 py-10">
             <motion.div
-                className="flex flex-col lg:flex-row w-full max-w-6xl mx-auto rounded-lg overflow-hidden shadow-lg"
+                className="flex flex-col lg:flex-row w-full max-w-6xl mx-auto rounded-lg overflow-hidden"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
             >
                 {/* Left: Login Form */}
-                <div className="w-full lg:w-1/2 p-8 flex flex-col justify-center bg-white rounded-xl shadow-inner">
+                <div className="w-full lg:w-1/2 p-8 flex flex-col justify-center bg-green-50 rounded-xl">
                     <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center text-deepgreen">
                         Login Now!
                     </h1>
@@ -62,21 +62,21 @@ const Login = () => {
                     ) : (
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="label">Email</label>
+                                <label className="label text-deepgreen">Email</label>
                                 <input
                                     type="email"
                                     name="email"
-                                    className="input input-bordered w-full"
+                                    className="input input-bordered w-full text-lightgreen"
                                     placeholder="Email"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="label">Password</label>
+                                <label className="label text-deepgreen">Password</label>
                                 <input
                                     type="password"
                                     name="password"
-                                    className="input input-bordered w-full"
+                                    className="input input-bordered w-full text-lightgreen"
                                     placeholder="Password"
                                     required
                                 />
