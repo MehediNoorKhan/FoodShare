@@ -7,6 +7,7 @@ import noDataAnimation from "../../assets/No-Data.json";
 import { CiCalendarDate } from "react-icons/ci";
 import { GoLocation } from "react-icons/go";
 import { MdOutlineInventory } from "react-icons/md";
+import AOS from "aos";
 
 const AvailableFoods = () => {
     const [foods, setFoods] = useState([]);
@@ -19,6 +20,10 @@ const AvailableFoods = () => {
     const foodsPerPage = 8;
 
     useEffect(() => {
+        AOS.init({ duration: 800, once: true });
+    }, []);
+
+    useEffect(() => {
         const delayDebounce = setTimeout(async () => {
             setLoading(true);
             try {
@@ -27,8 +32,8 @@ const AvailableFoods = () => {
                 });
 
                 let availableFoods = res.data;
-
                 const today = new Date();
+
                 availableFoods = availableFoods.filter((food) => {
                     const exp = new Date(food.expiredDateTime);
                     return exp > today;
@@ -75,9 +80,9 @@ const AvailableFoods = () => {
     };
 
     return (
-        <section className="bg-green-50 pt-24 relative z-0">
-            <div className="max-w-7xl mx-auto px-16 py-16">
-                <h1 className="text-4xl font-extrabold text-[#24725e] text-center mt-8 mb-12">
+        <section className="bg-green-50 pt-12 relative z-0 px-4 sm:px-8 md:px-16">
+            <div className="max-w-7xl mx-auto py-8">
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-[#24725e] text-center mt-8 mb-12">
                     Available Foods
                 </h1>
 
@@ -91,7 +96,7 @@ const AvailableFoods = () => {
                             setSearchTerm(e.target.value);
                             setCurrentPage(1);
                         }}
-                        className="input input-bordered w-full md:w-88"
+                        className="input input-bordered w-full md:w-96"
                     />
 
                     <div
@@ -109,50 +114,36 @@ const AvailableFoods = () => {
                                         ? "Oldest"
                                         : "Sort"}
                             </span>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 512 512"
-                                className="arrow"
-                            >
-                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="arrow">
+                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
                             </svg>
                         </div>
 
                         <div className={`options ${dropdownActive ? "show" : ""}`}>
-                            <div className="option" onClick={() => handleSort("desc")}>
-                                Newest
-                            </div>
-                            <div className="option" onClick={() => handleSort("asc")}>
-                                Oldest
-                            </div>
+                            <div className="option" onClick={() => handleSort("desc")}>Newest</div>
+                            <div className="option" onClick={() => handleSort("asc")}>Oldest</div>
                         </div>
                     </div>
                 </div>
 
                 {/* Food Cards */}
                 {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                        {Array(8)
-                            .fill(0)
-                            .map((_, idx) => (
-                                <div
-                                    key={idx}
-                                    className="card animate-pulse bg-gray-200 h-80 rounded-lg"
-                                />
-                            ))}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        {Array(8).fill(0).map((_, idx) => (
+                            <div key={idx} className="bg-gray-200 rounded-2xl animate-pulse h-80" />
+                        ))}
                     </div>
                 ) : foods.length === 0 ? (
                     <div className="flex flex-col items-center justify-center mt-12">
                         <Lottie animationData={noDataAnimation} loop className="w-64 h-64" />
-                        <p className="text-gray-500 text-xl mt-4">
-                            There is no Food available
-                        </p>
+                        <p className="text-gray-500 text-xl mt-4">There is no Food available</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                        {currentFoods.map((food, index) => (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        {currentFoods.map((food) => (
                             <div
                                 key={food._id}
+                                data-aos="fade-up"
                                 className="card transform transition duration-300 hover:scale-[1.01] hover:shadow-2xl cursor-pointer flex flex-col justify-between"
                             >
                                 <div className="card__content flex flex-col gap-4 p-4">
@@ -160,21 +151,12 @@ const AvailableFoods = () => {
                                         {getRemainingDays(food.expiredDateTime)} days left
                                     </span>
 
-                                    {/* Food Image */}
                                     <div className="card__image rounded-xl overflow-hidden">
-                                        <img
-                                            src={food.foodImage}
-                                            alt={food.foodName}
-                                            className="w-full h-40 object-cover"
-                                        />
+                                        <img src={food.foodImage} alt={food.foodName} className="w-full h-40 object-cover" />
                                     </div>
 
-                                    {/* Food Title */}
-                                    <p className="card__title text-lg font-bold text-gray-700">
-                                        {food.foodName}
-                                    </p>
+                                    <p className="card__title text-lg font-bold text-gray-700">{food.foodName}</p>
 
-                                    {/* Food Details with Icons */}
                                     <div className="card__description flex flex-col gap-2 text-gray-600">
                                         <span className="flex items-center gap-1">
                                             <MdOutlineInventory className="text-[#22c55e] w-5 h-5" />
@@ -195,16 +177,13 @@ const AvailableFoods = () => {
                                     </div>
 
                                     {food.additionalNotes && (
-                                        <p className="card__description italic opacity-80">
-                                            {food.additionalNotes}
-                                        </p>
+                                        <p className="card__description italic opacity-80">{food.additionalNotes}</p>
                                     )}
                                 </div>
 
-                                {/* View Details Button fixed inside card */}
                                 <div className="card__footer flex justify-center pt-4 pb-6 mx-2">
                                     <a href={`/fooddetails/${food._id}`} className="w-full">
-                                        <button className="card__button bg-[#22c55e] text-white rounded-full px-4 py-2 font-semibold hover:bg-green-600 cursor-pointer w-full">
+                                        <button className="card__button bg-[#22c55e] text-white rounded-full px-4 py-2 font-semibold hover:bg-green-600 w-full">
                                             View Details
                                         </button>
                                     </a>
@@ -216,11 +195,11 @@ const AvailableFoods = () => {
 
                 {/* Pagination */}
                 {foods.length > foodsPerPage && (
-                    <div className="flex items-center justify-center gap-2 mt-10">
+                    <div className="flex items-center justify-center gap-2 mt-10 flex-wrap">
                         <button
                             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                             disabled={currentPage === 1}
-                            className="px-3 py-1 border cursor-pointer border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#22c55e] flex items-center gap-1"
+                            className="px-3 py-1 border border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50"
                         >
                             Previous
                         </button>
@@ -229,7 +208,7 @@ const AvailableFoods = () => {
                             <button
                                 key={page}
                                 onClick={() => setCurrentPage(page)}
-                                className={`px-3 py-1 border border-[#22c55e] cursor-pointer rounded ${currentPage === page
+                                className={`px-3 py-1 border border-[#22c55e] rounded ${currentPage === page
                                     ? "bg-[#22c55e] text-white"
                                     : "text-[#22c55e] hover:bg-[#22c55e] hover:text-white"
                                     }`}
@@ -241,7 +220,7 @@ const AvailableFoods = () => {
                         <button
                             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                             disabled={currentPage === totalPages}
-                            className="px-3 py-1 cursor-pointer border border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#22c55e] flex items-center gap-1"
+                            className="px-3 py-1 border border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50"
                         >
                             Next
                         </button>

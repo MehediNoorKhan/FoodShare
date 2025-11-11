@@ -4,9 +4,10 @@ import { Link } from "react-router";
 import { MdOutlineInventory } from "react-icons/md";
 import { GoLocation } from "react-icons/go";
 import { CiCalendarDate } from "react-icons/ci";
-import "../FeaturedFoods.css";
 import Lottie from "lottie-react";
-import noDataAnimation from "../../assets/No-Data.json"; // Make sure path is correct
+import { motion } from "framer-motion";
+import noDataAnimation from "../../assets/No-Data.json";
+import "../FeaturedFoods.css";
 
 const FeaturedFoods = () => {
     const [featuredFoods, setFeaturedFoods] = useState([]);
@@ -46,15 +47,14 @@ const FeaturedFoods = () => {
 
     return (
         <section className="bg-green-50">
-            <div className="max-w-7xl mx-auto px-4 py-12">
-                <h2 className="text-3xl font-bold mb-8 text-center text-[#24725e]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-12">
+                <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#24725e]">
                     Featured Foods
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                    {loading ? (
-                        // Skeleton Loader
-                        Array(4)
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+                    {loading
+                        ? Array(4)
                             .fill(0)
                             .map((_, idx) => (
                                 <div
@@ -71,79 +71,80 @@ const FeaturedFoods = () => {
                                     <div className="bg-gray-300 h-10 w-full rounded-full mt-4"></div>
                                 </div>
                             ))
-                    ) : validFoods.length === 0 ? (
-                        // No Data Animation
-                        <div className="col-span-4 flex flex-col items-center justify-center">
-                            <Lottie
-                                animationData={noDataAnimation}
-                                loop
-                                className="w-64 h-64"
-                            />
-                            <p className="text-gray-500 text-xl mt-4">
-                                No featured foods available
-                            </p>
-                        </div>
-                    ) : (
-                        // Actual Food Cards
-                        validFoods.map((food) => (
-                            <div
-                                key={food._id}
-                                className="card transform transition duration-300 hover:scale-[1.01] hover:shadow-2xl cursor-pointer flex flex-col justify-between"
-                            >
-                                <div className="card__content flex flex-col gap-4 p-4">
-                                    <span className="card__badge mb-2 text-sm text-white bg-[#22c55e] px-2 py-1 rounded-full">
-                                        {getRemainingDays(food.expiredDateTime)} days left
-                                    </span>
-
-                                    <div className="card__image rounded-xl overflow-hidden">
-                                        <img
-                                            src={food.foodImage}
-                                            alt={food.foodName}
-                                            className="w-full h-40 object-cover"
-                                        />
-                                    </div>
-
-                                    <p className="card__title text-lg font-bold text-gray-700">
-                                        {food.foodName}
-                                    </p>
-
-                                    <div className="card__description flex flex-col gap-2 text-gray-600">
-                                        <span className="flex items-center gap-1">
-                                            <MdOutlineInventory className="text-[#22c55e] w-5 h-5" />
-                                            <strong>Quantity:</strong> {food.foodQuantity}
-                                        </span>
-                                        <span className="flex items-center gap-1">
-                                            <GoLocation className="text-[#22c55e] w-5 h-5" />
-                                            <strong>Pickup Location:</strong> {food.pickupLocation}
-                                        </span>
-                                        <span className="flex items-center gap-1">
-                                            <CiCalendarDate className="text-[#22c55e] w-5 h-5" />
-                                            <strong>Expires:</strong>{" "}
-                                            {new Date(food.expiredDateTime).toLocaleString(undefined, {
-                                                dateStyle: "medium",
-                                                timeStyle: "short",
-                                            })}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="card__footer flex justify-center pt-4 pb-6 mx-2">
-                                    <Link to={`/fooddetails/${food._id}`} className="w-full">
-                                        <button className="card__button bg-[#22c55e] text-white rounded-full px-4 py-2 font-semibold hover:bg-green-600 cursor-pointer w-full">
-                                            View Details
-                                        </button>
-                                    </Link>
-                                </div>
+                        : validFoods.length === 0 ? (
+                            <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex flex-col items-center justify-center">
+                                <Lottie
+                                    animationData={noDataAnimation}
+                                    loop
+                                    className="w-48 sm:w-64 h-48 sm:h-64"
+                                />
+                                <p className="text-gray-500 text-lg sm:text-xl mt-4">
+                                    No featured foods available
+                                </p>
                             </div>
-                        ))
-                    )}
+                        ) : (
+                            validFoods.map((food) => (
+                                <motion.div
+                                    key={food._id}
+                                    className="card flex flex-col justify-between transform transition duration-300 hover:scale-[1.01] hover:shadow-2xl cursor-pointer"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    <div className="card__content flex flex-col gap-4 p-4">
+                                        <span className="card__badge mb-2 text-sm sm:text-base text-white bg-[#22c55e] px-2 py-1 rounded-full">
+                                            {getRemainingDays(food.expiredDateTime)} days left
+                                        </span>
+
+                                        <div className="card__image rounded-xl overflow-hidden">
+                                            <img
+                                                src={food.foodImage}
+                                                alt={food.foodName}
+                                                className="w-full h-40 sm:h-48 object-cover"
+                                            />
+                                        </div>
+
+                                        <p className="card__title text-lg sm:text-xl font-bold text-gray-700">
+                                            {food.foodName}
+                                        </p>
+
+                                        <div className="card__description flex flex-col gap-2 text-gray-600 text-sm sm:text-base">
+                                            <span className="flex items-center gap-1">
+                                                <MdOutlineInventory className="text-[#22c55e] w-5 h-5" />
+                                                <strong>Quantity:</strong> {food.foodQuantity}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <GoLocation className="text-[#22c55e] w-5 h-5" />
+                                                <strong>Pickup Location:</strong> {food.pickupLocation}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <CiCalendarDate className="text-[#22c55e] w-5 h-5" />
+                                                <strong>Expires:</strong>{" "}
+                                                {new Date(food.expiredDateTime).toLocaleString(undefined, {
+                                                    dateStyle: "medium",
+                                                    timeStyle: "short",
+                                                })}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="card__footer flex justify-center pt-4 pb-6 mx-2">
+                                        <Link to={`/fooddetails/${food._id}`} className="w-full">
+                                            <button className="card__button bg-[#22c55e] text-white rounded-full px-4 py-2 font-semibold hover:bg-green-600 cursor-pointer w-full">
+                                                View Details
+                                            </button>
+                                        </Link>
+                                    </div>
+                                </motion.div>
+                            ))
+                        )}
                 </div>
 
-                {/* See More Button */}
                 <div className="flex justify-center mt-10">
                     <Link to="/availablefood">
-                        <button className="seemorebutton">
-                            <span className="button__icon-wrapper">
+                        <button className="seemorebutton text-sm sm:text-base px-4 py-2">
+                            <span className="button__icon-wrapper mr-2">
                                 <svg
                                     viewBox="0 0 14 15"
                                     fill="none"

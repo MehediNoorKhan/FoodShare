@@ -47,23 +47,14 @@ const ManageFood = () => {
     );
 
     const deleteMutation = useMutation({
-        mutationFn: async (id) => {
-            const res = await axiosSecure.delete(`/food/${id}`);
-            return res.data;
-        },
+        mutationFn: async (id) => await axiosSecure.delete(`/food/${id}`),
         onSuccess: (_, id) => {
             toast.success("Food deleted successfully");
             queryClient.setQueryData(["manage-food", user.email], (old) =>
                 old.filter((item) => item._id !== id)
             );
         },
-        onError: (error) => {
-            if (error.response && error.response.data?.error) {
-                toast.error(error.response.data.error);
-            } else {
-                toast.error("Failed to delete food");
-            }
-        },
+        onError: () => toast.error("Failed to delete food"),
     });
 
     const updateMutation = useMutation({
@@ -89,9 +80,7 @@ const ManageFood = () => {
             cancelButtonColor: "#3085d6",
             confirmButtonText: "Yes, delete it!",
         }).then((result) => {
-            if (result.isConfirmed) {
-                deleteMutation.mutate(id);
-            }
+            if (result.isConfirmed) deleteMutation.mutate(id);
         });
     };
 
@@ -122,8 +111,8 @@ const ManageFood = () => {
     if (isLoading) return <ManageFoodSkeleton />;
 
     return (
-        <div className="max-w-7xl mx-auto p-20">
-            <h1 className="text-3xl font-bold mb-16 mt-8 text-center text-emerald-600">
+        <div className="max-w-7xl mx-auto px-4 py-10 sm:py-14">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-8 mb-10 text-center text-emerald-600">
                 Manage Your Foods
             </h1>
 
@@ -136,11 +125,11 @@ const ManageFood = () => {
                 />
             ) : (
                 <>
-                    <div className="overflow-x-auto mt-6 rounded-lg shadow-lg border border-emerald-200">
-                        <table className="table-auto w-full border border-emerald-200 rounded-lg overflow-hidden">
+                    <div className="overflow-x-auto rounded-lg shadow-lg border border-emerald-200">
+                        <table className="table-auto w-full border-collapse border border-emerald-200">
                             <thead className="bg-emerald-100 text-emerald-700">
                                 <tr>
-                                    <th className="p-2 text-left pl-18">Food</th>
+                                    <th className="p-2 text-left">Food</th>
                                     <th className="p-2 text-center">Quantity</th>
                                     <th className="p-2 text-center">Pickup Location</th>
                                     <th className="p-2 text-center">Expire Date</th>
@@ -152,17 +141,15 @@ const ManageFood = () => {
                                     <motion.tr
                                         key={food._id}
                                         initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
                                         transition={{ delay: index * 0.05 }}
                                         className="bg-green-50 hover:bg-green-100 transition-all"
                                     >
-                                        {/* Food Info */}
-                                        <td className="p-2 text-left">
-                                            <div className="flex items-center gap-3">
-                                                <div className="avatar">
-                                                    <div className="mask mask-squircle h-12 w-12">
-                                                        <img src={food.foodImage} alt={food.foodName} />
-                                                    </div>
+                                        <td className="p-2">
+                                            <div className="flex items-center gap-2 sm:gap-3">
+                                                <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-md overflow-hidden flex-shrink-0">
+                                                    <img src={food.foodImage} alt={food.foodName} className="w-full h-full object-cover" />
                                                 </div>
                                                 <div>
                                                     <div className="font-bold">{food.foodName}</div>
@@ -170,36 +157,22 @@ const ManageFood = () => {
                                                 </div>
                                             </div>
                                         </td>
-
-                                        {/* Quantity */}
                                         <td className="p-2 text-center font-medium">{food.foodQuantity}</td>
-
-                                        {/* Pickup Location */}
-                                        <td className="p-2 text-green-700 text-center font-medium">
-                                            <div className="flex items-center justify-center gap-1">
-                                                <MdLocationOn className="text-green-500" /> {food.pickupLocation}
-                                            </div>
+                                        <td className="p-2 text-green-700 text-center font-medium flex items-center justify-center gap-1">
+                                            <MdLocationOn className="text-green-500" /> {food.pickupLocation}
                                         </td>
-
-                                        {/* Expire Date */}
-                                        <td className="p-2 text-center text-green-700 font-medium">
-                                            <div className="flex items-center justify-center gap-1">
-                                                <MdEvent className="text-green-500" />
-                                                {new Date(food.expiredDateTime).toLocaleString("en-GB", {
-                                                    day: "2-digit",
-                                                    month: "2-digit",
-                                                    year: "numeric",
-                                                    hour: "numeric",
-                                                    minute: "2-digit",
-                                                    second: "2-digit",
-                                                    hour12: true,
-                                                })}
-                                            </div>
+                                        <td className="p-2 text-green-700 text-center font-medium flex items-center justify-center gap-1">
+                                            <MdEvent className="text-green-500" />
+                                            {new Date(food.expiredDateTime).toLocaleString("en-GB", {
+                                                day: "2-digit",
+                                                month: "2-digit",
+                                                year: "numeric",
+                                                hour: "numeric",
+                                                minute: "2-digit",
+                                            })}
                                         </td>
-
-                                        {/* Actions */}
-                                        <td className="p-2">
-                                            <div className="flex justify-center gap-2">
+                                        <td className="p-2 text-center">
+                                            <div className="flex flex-col sm:flex-row justify-center gap-2">
                                                 <button
                                                     onClick={() => openUpdateModal(food)}
                                                     className="btn btn-ghost btn-xs bg-yellow-400 hover:bg-yellow-500 text-white flex items-center gap-1"
@@ -223,11 +196,11 @@ const ManageFood = () => {
 
                     {/* Pagination */}
                     {foods.length > foodsPerPage && (
-                        <div className="flex items-center justify-center gap-2 mt-10">
+                        <div className="flex flex-wrap justify-center gap-2 mt-6">
                             <button
                                 onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                                 disabled={currentPage === 1}
-                                className="px-3 py-1 border cursor-pointer border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#22c55e] flex items-center gap-1"
+                                className="px-3 py-1 border border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50"
                             >
                                 Previous
                             </button>
@@ -236,7 +209,7 @@ const ManageFood = () => {
                                 <button
                                     key={page}
                                     onClick={() => setCurrentPage(page)}
-                                    className={`px-3 py-1 border border-[#22c55e] cursor-pointer rounded ${currentPage === page
+                                    className={`px-3 py-1 border border-[#22c55e] rounded ${currentPage === page
                                         ? "bg-[#22c55e] text-white"
                                         : "text-[#22c55e] hover:bg-[#22c55e] hover:text-white"
                                         }`}
@@ -248,7 +221,7 @@ const ManageFood = () => {
                             <button
                                 onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                                 disabled={currentPage === totalPages}
-                                className="px-3 py-1 cursor-pointer border border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#22c55e] flex items-center gap-1"
+                                className="px-3 py-1 border border-[#22c55e] text-[#22c55e] rounded hover:bg-[#22c55e] hover:text-white disabled:opacity-50"
                             >
                                 Next
                             </button>
@@ -257,13 +230,17 @@ const ManageFood = () => {
                 </>
             )}
 
+            {/* Update Modal */}
             {showUpdateModal && (
-                <div className="fixed inset-0 backdrop-blur-sm bg-black/20 flex items-center justify-center z-50">
-                    <div className="bg-green-50 p-5 rounded-lg shadow-lg w-full max-w-md max-h-[75vh] overflow-y-auto relative">
-                        {/* Close button */}
+                <motion.div
+                    className="fixed inset-0 backdrop-blur-sm bg-black/20 flex items-center justify-center z-50 px-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                >
+                    <div className="bg-green-50 p-5 rounded-lg shadow-lg w-full max-w-md max-h-[80vh] overflow-y-auto relative">
                         <button
                             onClick={() => setShowUpdateModal(false)}
-                            className="absolute top-3 right-3 cursor-pointer text-white bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 flex items-center justify-center font-bold shadow-lg transition"
+                            className="absolute top-3 right-3 cursor-pointer text-white bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 flex items-center justify-center font-bold"
                         >
                             ×
                         </button>
@@ -272,7 +249,6 @@ const ManageFood = () => {
                             Update Food
                         </h2>
 
-                        {/* Food Image */}
                         <div className="flex justify-center mb-3 relative">
                             <img
                                 src={updateForm.foodImage}
@@ -289,12 +265,8 @@ const ManageFood = () => {
                                     const file = e.target.files[0];
                                     if (file) {
                                         const reader = new FileReader();
-                                        reader.onload = (event) => {
-                                            setUpdateForm((prev) => ({
-                                                ...prev,
-                                                foodImage: event.target.result
-                                            }));
-                                        };
+                                        reader.onload = (event) =>
+                                            setUpdateForm((prev) => ({ ...prev, foodImage: event.target.result }));
                                         reader.readAsDataURL(file);
                                     }
                                 }}
@@ -371,7 +343,7 @@ const ManageFood = () => {
                             </div>
                         </form>
                     </div>
-                </div>
+                </motion.div>
             )}
         </div>
     );

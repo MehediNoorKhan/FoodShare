@@ -125,7 +125,7 @@
   position: absolute;
   width: 55px;
   height: 55px;
-  background-color: #212121;
+  background-color: white;
   border-radius: 50px;
   z-index: -1;
   transition: 0.4s;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaTruck, FaLeaf, FaStar, FaHeadset } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const features = [
     {
@@ -37,8 +38,13 @@ const FeaturesSection = () => {
         return () => clearTimeout(timer);
     }, []);
 
+    const cardVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
+    };
+
     return (
-        <section className="max-w-7xl mx-auto px-4 py-14 md:py-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-14 md:py-16">
             {/* Heading */}
             <div className="text-center mb-12">
                 {loading ? (
@@ -74,9 +80,14 @@ const FeaturesSection = () => {
                     : features.map((feature, idx) => {
                         const Icon = feature.icon;
                         return (
-                            <div
+                            <motion.div
                                 key={idx}
                                 className="group flex flex-col items-center p-6 rounded-2xl cursor-pointer border-2 border-transparent transition-all duration-300 hover:border-green-500 hover:shadow-xl bg-white"
+                                variants={cardVariants}
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true, amount: 0.3 }}
+                                transition={{ duration: 0.5, delay: idx * 0.2 }}
                             >
                                 <div
                                     className={`w-20 h-20 flex items-center justify-center mb-5 rounded-full transition-all duration-300 ${feature.bgColor} group-hover:bg-white shadow-md`}
@@ -89,7 +100,7 @@ const FeaturesSection = () => {
                                 <p className="text-sm sm:text-base text-gray-500 text-center group-hover:text-gray-600 transition-colors duration-300">
                                     {feature.description}
                                 </p>
-                            </div>
+                            </motion.div>
                         );
                     })}
             </div>

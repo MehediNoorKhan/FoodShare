@@ -9,6 +9,7 @@ import alreadyMember from "../../assets/already_member.png";
 import successAnimation from "../../assets/success.json";
 import MembershipSkeleton from "../Skeletons/MembershipSkeleton";
 import Lottie from "lottie-react";
+import { motion } from "framer-motion";
 
 const stripePromise = loadStripe(
     "pk_test_51RuFCD2N3HoHVSaoW7VxBVoMp4Wc4REQrh0EnYlar3Ej52hF8hs2Xe1f4BbY7Dfq5AhLPvcHpLSUwVzdVKVPi9lA00F7nQdlAE"
@@ -29,10 +30,7 @@ const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
         axios
             .post("http://localhost:5000/create-payment-intent", { price })
             .then((res) => setClientSecret(res.data.clientSecret))
-            .catch((err) => {
-                console.error("Error fetching client secret:", err);
-                toast.error("Failed to initialize payment.");
-            })
+            .catch(() => toast.error("Failed to initialize payment."))
             .finally(() => setInitLoading(false));
     }, [price, user?.email]);
 
@@ -71,25 +69,21 @@ const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
                 toast.success("Your membership is now active!");
                 onMembershipUpdate("yes");
             }
-        } catch (err) {
-            console.error("Payment error:", err);
+        } catch {
             toast.error("Payment failed. Please try again.");
         } finally {
             setLoading(false);
         }
     };
 
-    if (initLoading) {
-        return (
-            <div className="min-h-[300px] flex items-center justify-center">
-            </div>
-        );
-    }
+    if (initLoading) return <MembershipSkeleton />;
 
     return (
-        <form
+        <motion.form
             onSubmit={handleSubmit}
-            className="max-w-md mx-auto mt-6 p-6 rounded-2xl shadow-lg bg-green-100/90 border-2 border-[#22c55e]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-md mx-auto p-6 rounded-2xl shadow-lg bg-green-100/90 border-2 border-[#22c55e]"
         >
             <CardElement
                 options={{
@@ -111,7 +105,7 @@ const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
             >
                 {loading ? "Processing..." : `Pay $${price}`}
             </button>
-        </form>
+        </motion.form>
     );
 };
 
@@ -131,63 +125,67 @@ const Membership = () => {
         setLoading(false);
     }, [user, userData]);
 
-    // Background wrapper component
+    // Background wrapper
     const BackgroundWrapper = ({ children }) => (
         <div className="relative min-h-screen flex items-center justify-center px-4 py-12">
-            {/* Always blurred background */}
             <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${membershipBanner})`, filter: "blur(8px)" }}
             />
             <div className="absolute inset-0 bg-black/20"></div>
-            <div className="relative z-10 w-full max-w-xl">{children}</div>
+            <motion.div
+                className="relative z-10 w-full max-w-xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+            >
+                {children}
+            </motion.div>
         </div>
     );
 
     // Loading skeleton
-    if (loading || !currentUser) {
+    if (loading || !currentUser)
         return (
             <BackgroundWrapper>
                 <MembershipSkeleton />
             </BackgroundWrapper>
         );
-    }
 
     // Already a member
-    if (membershipStatus === "yes") {
+    if (membershipStatus === "yes")
         return (
             <BackgroundWrapper>
-                <div className="flex flex-col items-center justify-center relative">
-                    {/* Already member image */}
+                <motion.div
+                    className="flex flex-col items-center justify-center relative"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
                     <img
                         src={alreadyMember}
                         alt="Already a member"
-                        className="max-w-full w-[300px] md:w-[400px] rounded-lg mb-8"
+                        className="max-w-full w-[250px] sm:w-[300px] md:w-[400px] rounded-lg mb-8"
                     />
-
-                    {/* Success animation on top of image */}
                     <div className="absolute -top-12 transform -translate-y-1/2">
-                        <Lottie
-                            loop={true}
-                            animationData={successAnimation}
-                            play
-                            style={{ width: 200, height: 200 }}
-                        />
+                        <Lottie loop animationData={successAnimation} style={{ width: 180, height: 180 }} />
                     </div>
-
-                </div>
+                </motion.div>
             </BackgroundWrapper>
         );
-    }
 
     // Payment form for new member
     return (
         <BackgroundWrapper>
-            <div className="w-full max-w-xl bg-green-100/90 shadow-lg rounded-2xl p-8">
+            <motion.div
+                className="w-full max-w-xl bg-green-100/90 shadow-lg rounded-2xl p-6 sm:p-8"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+            >
                 <h2 className="text-2xl font-bold text-[#22c55e] mb-4 text-center">
                     Pay $10 to Become a Member
                 </h2>
-                <p className="text-gray-700 mb-4 text-center">
+                <p className="text-gray-700 mb-6 text-center text-sm sm:text-base">
                     After payment, your membership will be activated.
                 </p>
                 <Elements stripe={stripePromise}>
@@ -200,7 +198,7 @@ const Membership = () => {
                         }}
                     />
                 </Elements>
-            </div>
+            </motion.div>
         </BackgroundWrapper>
     );
 };

@@ -1,36 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import { FaChevronDown } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa";
+import { FaChevronDown, FaCheck } from "react-icons/fa";
 import faqAnimation from '../../assets/FAQ.json';
 
 const faqs = [
-  {
-    question: "How can I share my excess food?",
-    answer:
-      "List your available food items on our platform. Specify quantity, location, and expiry, and interested users can request them.",
-  },
-  {
-    question: "How do I request food?",
-    answer:
-      "Browse available food items, select what you need, and submit a request. The donor will be notified to coordinate pickup.",
-  },
-  {
-    question: "Is there any cost involved?",
-    answer:
-      "No, our platform is free for both donors and recipients to reduce food waste and help those in need.",
-  },
-  {
-    question: "Can I donate perishable food?",
-    answer:
-      "Yes, ensure it is safe to consume, properly packaged, and will be picked up before expiration.",
-  },
-  {
-    question: "How do I ensure food safety?",
-    answer:
-      "Always package food properly, label it clearly, and only donate fresh, safe-to-eat items.",
-  },
+  { question: "How can I share my excess food?", answer: "List your available food items on our platform. Specify quantity, location, and expiry, and interested users can request them." },
+  { question: "How do I request food?", answer: "Browse available food items, select what you need, and submit a request. The donor will be notified to coordinate pickup." },
+  { question: "Is there any cost involved?", answer: "No, our platform is free for both donors and recipients to reduce food waste and help those in need." },
+  { question: "Can I donate perishable food?", answer: "Yes, ensure it is safe to consume, properly packaged, and will be picked up before expiration." },
+  { question: "How do I ensure food safety?", answer: "Always package food properly, label it clearly, and only donate fresh, safe-to-eat items." },
 ];
 
 const FAQSection = () => {
@@ -42,26 +21,23 @@ const FAQSection = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const toggleAccordion = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const toggleAccordion = (index) => setOpenIndex(openIndex === index ? null : index);
 
   return (
-    <section className="relative py-24 bg-green-50 px-6 md:px-16 overflow-hidden">
-      {/* Background animation */}
+    <section className="relative py-16 md:py-24 bg-green-50 px-4 sm:px-6 md:px-16 overflow-hidden">
+      {/* Background Lottie animation */}
       <div className="absolute inset-0 flex justify-center items-center opacity-20 pointer-events-none">
-        <Lottie animationData={faqAnimation} loop={true} className="w-full max-w-2xl" />
+        <Lottie animationData={faqAnimation} loop className="w-full max-w-2xl" />
       </div>
 
-      {/* Content overlay */}
-      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-        {/* Left text content */}
+      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-start">
+        {/* Left Text Content */}
         {loading ? (
           <div className="space-y-4 z-10">
-            <div className="h-10 w-64 bg-gray-300 rounded animate-pulse"></div>
-            <div className="h-4 w-96 bg-gray-300 rounded animate-pulse"></div>
+            <div className="h-10 w-48 sm:w-64 bg-gray-300 rounded animate-pulse"></div>
+            <div className="h-4 w-full sm:w-96 bg-gray-300 rounded animate-pulse"></div>
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-6 w-full max-w-md bg-gray-300 rounded animate-pulse"></div>
+              <div key={i} className="h-6 w-full max-w-md sm:max-w-lg bg-gray-300 rounded animate-pulse"></div>
             ))}
           </div>
         ) : (
@@ -72,18 +48,13 @@ const FAQSection = () => {
             viewport={{ once: true }}
             className="text-left z-10"
           >
-            <h2 className="text-4xl font-bold text-deepgreen mb-4">
-              Frequently Asked Questions
-            </h2>
-
-            <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-              Our food sharing platform helps reduce waste and connect people who want to
-              share food with those who need it. Here are some helpful points to get
-              started:
+            <h2 className="text-3xl sm:text-4xl font-bold text-deepgreen mb-4">Frequently Asked Questions</h2>
+            <p className="text-gray-700 mb-6 text-base sm:text-lg leading-relaxed">
+              Our food sharing platform helps reduce waste and connect people who want to share food with those who need it. Here are some helpful points to get started:
             </p>
 
             <motion.ul
-              className="space-y-4"
+              className="space-y-3 sm:space-y-4"
               initial="hidden"
               whileInView="show"
               viewport={{ once: true }}
@@ -92,10 +63,7 @@ const FAQSection = () => {
                 show: {
                   opacity: 1,
                   y: 0,
-                  transition: {
-                    delayChildren: 0.3,
-                    staggerChildren: 0.15,
-                  },
+                  transition: { delayChildren: 0.3, staggerChildren: 0.15 },
                 },
               }}
             >
@@ -114,23 +82,18 @@ const FAQSection = () => {
                   <div className="w-7 h-7 flex items-center justify-center bg-lightgreen text-white rounded-full shadow-md">
                     <FaCheck size={14} />
                   </div>
-                  <span className="text-gray-700 text-base leading-relaxed">
-                    {text}
-                  </span>
+                  <span className="text-gray-700 text-sm sm:text-base leading-relaxed">{text}</span>
                 </motion.li>
               ))}
             </motion.ul>
           </motion.div>
         )}
 
-        {/* Right accordion */}
+        {/* Right Accordion */}
         {loading ? (
           <div className="space-y-4 z-10">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-16 bg-gray-300 rounded-lg animate-pulse w-full"
-              ></div>
+              <div key={i} className="h-16 bg-gray-300 rounded-lg animate-pulse w-full sm:h-20"></div>
             ))}
           </div>
         ) : (
@@ -152,12 +115,11 @@ const FAQSection = () => {
                 >
                   <button
                     onClick={() => toggleAccordion(index)}
-                    className="flex justify-between items-center w-full font-semibold text-left text-deepgreen text-lg"
+                    className="flex justify-between items-center w-full font-semibold text-left text-deepgreen text-base sm:text-lg"
                   >
                     {item.question}
                     <FaChevronDown
-                      className={`ml-2 transform transition-transform duration-300 ${openIndex === index ? "rotate-180" : ""
-                        }`}
+                      className={`ml-2 transform transition-transform duration-300 ${openIndex === index ? "rotate-180" : ""}`}
                     />
                   </button>
 
@@ -166,7 +128,7 @@ const FAQSection = () => {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="text-gray-700 mt-3 text-sm leading-relaxed"
+                      className="text-gray-700 mt-3 text-sm sm:text-base leading-relaxed"
                     >
                       {item.answer}
                     </motion.div>

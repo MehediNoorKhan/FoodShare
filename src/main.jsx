@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { RouterProvider } from "react-router";
 import { router } from "./Router/Route";
 import AuthProvider from "./Provider/AuthProvider";
+import "aos/dist/aos.css";
 
 // ✅ TanStack Query imports
 import {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
+import AOS from "aos";
 
 const slides = [
     {
@@ -36,13 +37,16 @@ const Banner = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        AOS.init({ duration: 800, once: true });
+    }, []);
+
+    useEffect(() => {
         const interval = setInterval(() => {
             setCurrent((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
         }, 5000);
         return () => clearInterval(interval);
     }, []);
 
-    // Simulate image loading
     useEffect(() => {
         const img = new Image();
         img.src = slides[current].image;
@@ -52,26 +56,35 @@ const Banner = () => {
     const { image, heading, subheading, buttonText, buttonLink } = slides[current];
 
     return (
-        <div className="relative w-full h-[80vh]">
+        <div className="relative w-full h-[75vh] sm:h-[70vh] md:h-[80vh] overflow-hidden">
+
             {loading ? (
-                // Skeleton loader
                 <div className="w-full h-full bg-gray-300 animate-pulse relative">
                     <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center px-4">
-                        <div className="h-10 w-64 bg-gray-400 rounded mb-4 animate-pulse"></div>
-                        <div className="h-6 w-96 bg-gray-400 rounded mb-4 animate-pulse"></div>
-                        <div className="h-10 w-40 bg-gray-500 rounded-full animate-pulse"></div>
+                        <div className="h-7 w-40 sm:w-64 bg-gray-400 rounded mb-4 animate-pulse"></div>
+                        <div className="h-5 w-60 sm:w-96 bg-gray-400 rounded mb-4 animate-pulse"></div>
+                        <div className="h-10 w-32 sm:w-40 bg-gray-500 rounded-full animate-pulse"></div>
                     </div>
                 </div>
             ) : (
                 <>
                     <img src={image} alt="Slide" className="w-full h-full object-cover" />
 
-                    <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center text-white px-4">
-                        <h1 className="text-5xl sm:text-2xl md:text-5xl font-bold mb-4">{heading}</h1>
-                        <p className="text-lg md:text-2xl mb-6 max-w-2xl">{subheading}</p>
+                    <div
+                        data-aos="fade-up"
+                        className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center text-white px-4"
+                    >
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
+                            {heading}
+                        </h1>
+
+                        <p className="text-sm sm:text-base md:text-xl mb-6 max-w-xl md:max-w-2xl">
+                            {subheading}
+                        </p>
+
                         <Link
                             to={buttonLink}
-                            className="bg-[#22c55e] hover:bg-[#24725e] px-6 py-3 rounded-full text-lg font-semibold shadow-lg transition"
+                            className="bg-[#22c55e] hover:bg-[#24725e] px-5 sm:px-6 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold shadow-lg transition"
                         >
                             {buttonText}
                         </Link>
@@ -79,15 +92,12 @@ const Banner = () => {
                 </>
             )}
 
-            {/* Slider Dots */}
-            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex space-x-2">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
                 {slides.map((_, i) => (
                     <button
                         key={i}
                         onClick={() => setCurrent(i)}
-                        className={`rounded-full transition-all duration-300 ${i === current
-                                ? "w-6 h-3 bg-[#22c55e]" // active: wider and colorful
-                                : "w-3 h-3 bg-white/50" // inactive: small and semi-transparent
+                        className={`rounded-full transition-all duration-300 ${i === current ? "w-6 h-3 bg-[#22c55e]" : "w-3 h-3 bg-white/50"
                             }`}
                     />
                 ))}

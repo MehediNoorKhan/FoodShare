@@ -4,7 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import AuthContext from "../Provider/AuthContext";
 import Lottie from "lottie-react";
-import loginAnimation from "../../assets/signin.json"; // Make sure the path is correct
+import loginAnimation from "../../assets/signin.json";
+import { motion } from "framer-motion";
 
 const Login = () => {
     const { login } = useContext(AuthContext);
@@ -35,43 +36,60 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4">
-            <div className="flex flex-col lg:flex-row w-full max-w-6xl mx-auto rounded-lg overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-green-50">
+            <motion.div
+                className="flex flex-col lg:flex-row w-full max-w-6xl mx-auto rounded-lg overflow-hidden shadow-lg"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+            >
                 {/* Left: Login Form */}
-                <div className="w-full lg:w-1/2 p-8 flex flex-col justify-center bg-green-50 rounded-xl">
-                    <h1 className="text-4xl font-bold mb-6 text-center text-gray-700 lg:text-center">
+                <div className="w-full lg:w-1/2 p-8 flex flex-col justify-center bg-white rounded-xl shadow-inner">
+                    <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center text-deepgreen">
                         Login Now!
                     </h1>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label className="label">Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                className="input input-bordered w-full"
-                                placeholder="Email"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="label">Password</label>
-                            <input
-                                type="password"
-                                name="password"
-                                className="input input-bordered w-full"
-                                placeholder="Password"
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            className="w-full mt-2 py-2 cursor-pointer rounded-md font-semibold text-white bg-[#22c55e] hover:bg-[#24725e] transition-colors"
-                            disabled={loading}
-                        >
-                            {loading ? "Logging in..." : "Login"}
-                        </button>
 
-                    </form>
+                    {/* Skeleton Loader */}
+                    {loading ? (
+                        <div className="space-y-4">
+                            <div className="h-6 w-full bg-gray-300 rounded animate-pulse"></div>
+                            <div className="h-6 w-full bg-gray-300 rounded animate-pulse"></div>
+                            <div className="h-10 w-full bg-gray-300 rounded mt-4 animate-pulse"></div>
+                            <div className="h-10 w-full bg-gray-300 rounded mt-2 animate-pulse"></div>
+                            <div className="h-10 w-full bg-gray-300 rounded mt-2 animate-pulse"></div>
+                        </div>
+                    ) : (
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <label className="label">Email</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    className="input input-bordered w-full"
+                                    placeholder="Email"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="label">Password</label>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    className="input input-bordered w-full"
+                                    placeholder="Password"
+                                    required
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="w-full mt-2 py-2 cursor-pointer rounded-md font-semibold text-white bg-[#22c55e] hover:bg-[#24725e] transition-colors"
+                                disabled={loading}
+                            >
+                                {loading ? "Logging in..." : "Login"}
+                            </button>
+                        </form>
+                    )}
 
                     <div className="text-sm mt-4 text-center lg:text-left">
                         Not have an account?{" "}
@@ -86,14 +104,20 @@ const Login = () => {
                 </div>
 
                 {/* Right: Login Animation */}
-                <div className="w-full lg:w-1/ flex items-center justify-center p-4">
+                <motion.div
+                    className="w-full lg:w-1/2 flex items-center justify-center p-4"
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                >
                     <Lottie
                         animationData={loginAnimation}
                         loop={true}
                         style={{ width: "100%", maxWidth: 400 }}
                     />
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
         </div>
     );
 };
