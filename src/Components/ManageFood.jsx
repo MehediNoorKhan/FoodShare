@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { MdLocationOn, MdEvent } from "react-icons/md";
 import ManageFoodSkeleton from "../Skeletons/ManageFoodSkeleton.jsx";
+import NoData from "./NoData.jsx";
 
 const ManageFood = () => {
     const navigate = useNavigate();
@@ -129,7 +130,7 @@ const ManageFood = () => {
             {foods.length === 0 ? (
                 <NoData
                     message="You haven't added any Food yet"
-                    subMessage="You can 'Add Food' if you want."
+                    subMessage="If you want, you can"
                     actionText="Add Food"
                     onAction={() => navigate("/addfood")}
                 />

@@ -126,7 +126,7 @@ const AddFood = () => {
     // Show limit reached if postCount > 9
     if (postCount > 9) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-green-50 px-4 py-16">
                 <Lottie
                     animationData={limitReachedAnimation}
                     loop={true}
@@ -135,12 +135,55 @@ const AddFood = () => {
                 <h2 className="text-3xl text-red-500 font-bold text-center mb-2 -mt-12">
                     You have reached the limit of Adding Post!
                 </h2>
-                <p className="text-center text-gray-500 mb-4 text-2xl">To add more  <button
+                <p className="text-center text-gray-500 mb-4 mt-4 text-2xl">To add more <button
                     onClick={() => navigate("/membership")}
-                    className="btn bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full text-lg font-semibold shadow-lg transition"
+                    className="group relative ml-4 cursor-pointer"
                 >
-                    Be a Member
-                </button></p>
+                    <div
+                        className="absolute -inset-1 rounded-xl bg-gradient-to-r from-green-500 to-green-700 opacity-75 blur transition duration-300 group-hover:opacity-100"
+                    ></div>
+                    <div
+                        className="absolute -inset-1 rounded-xl bg-gradient-to-r from-green-500 to-green-700 opacity-75 blur transition duration-300 group-hover:opacity-100 animation-delay-200"
+                    ></div>
+
+                    <span
+                        className="relative flex items-center gap-3 rounded-lg bg-black px-7 py-3 leading-none"
+                    >
+                        <span
+                            className="inline-block h-3 w-3 rounded-full bg-gradient-to-tr from-green-400 to-green-600 opacity-80 shadow-lg shadow-green-500/50 transition-all duration-300 group-hover:scale-125"
+                        ></span>
+
+                        <span className="inline-flex flex-col gap-1">
+                            <span className="text-sm font-medium text-green-400">Be a Member</span>
+                            <span className="text-[10px] font-light tracking-wider text-green-300/80">
+                                UNLOCK ALL FEATURES
+                            </span>
+                        </span>
+
+                        <span
+                            className="ml-auto transform transition-transform duration-300 group-hover:translate-x-1"
+                        >
+                            <svg
+                                className="h-5 w-5 text-green-400"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                ></path>
+                            </svg>
+                        </span>
+
+                        <div
+                            className="absolute -bottom-2 left-1/2 h-px w-5/6 -translate-x-1/2 bg-gradient-to-r from-transparent via-green-500 to-transparent opacity-50 blur-sm transition-all duration-300 group-hover:w-full"
+                        ></div>
+                    </span>
+                </button>
+                </p>
 
             </div>
         );

@@ -4,11 +4,17 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { toast } from "react-toastify";
 import AuthContext from "../Provider/AuthContext";
+import membershipBanner from "../assets/membership.png";
+import alreadyMember from "../../assets/already_member.png";
+import successAnimation from "../../assets/success.json";
+import MembershipSkeleton from "../Skeletons/MembershipSkeleton";
+import Lottie from "lottie-react";
 
-// Stripe publishable key
-const stripePromise = loadStripe("pk_test_51RuFCD2N3HoHVSaoW7VxBVoMp4Wc4REQrh0EnYlar3Ej52hF8hs2Xe1f4BbY7Dfq5AhLPvcHpLSUwVzdVKVPi9lA00F7nQdlAE");
+const stripePromise = loadStripe(
+    "pk_test_51RuFCD2N3HoHVSaoW7VxBVoMp4Wc4REQrh0EnYlar3Ej52hF8hs2Xe1f4BbY7Dfq5AhLPvcHpLSUwVzdVKVPi9lA00F7nQdlAE"
+);
 
-// ----- Checkout Form -----
+// ----- Checkout Form Component -----
 const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
     const stripe = useStripe();
     const elements = useElements();
@@ -58,14 +64,11 @@ const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
             if (paymentIntent.status === "succeeded") {
                 toast.success("Payment Successful 🎉");
 
-                // Update membership in backend
                 await axios.patch(`http://localhost:5000/users/membership/${user.email}`, {
                     membership: "yes",
                 });
 
                 toast.success("Your membership is now active!");
-
-                // Update local state immediately
                 onMembershipUpdate("yes");
             }
         } catch (err) {
@@ -78,19 +81,33 @@ const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
 
     if (initLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p>Initializing payment...</p>
+            <div className="min-h-[300px] flex items-center justify-center">
             </div>
         );
     }
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-6 p-6 bg-white shadow-md rounded-2xl">
-            <CardElement className="border p-4 rounded mb-4" />
+        <form
+            onSubmit={handleSubmit}
+            className="max-w-md mx-auto mt-6 p-6 rounded-2xl shadow-lg bg-green-100/90 border-2 border-[#22c55e]"
+        >
+            <CardElement
+                options={{
+                    style: {
+                        base: {
+                            fontSize: "16px",
+                            color: "#065f46",
+                            "::placeholder": { color: "#10b981" },
+                        },
+                        invalid: { color: "#f87171" },
+                    },
+                }}
+                className="border-2 border-green-200 p-4 rounded mb-4"
+            />
             <button
                 type="submit"
                 disabled={!stripe || !clientSecret || loading}
-                className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition"
+                className="w-full bg-[#22c55e] text-white py-2 cursor-pointer rounded-md font-semibold hover:bg-[#24725e] transition"
             >
                 {loading ? "Processing..." : `Pay $${price}`}
             </button>
@@ -109,49 +126,82 @@ const Membership = () => {
     useEffect(() => {
         if (!user?.email || !userData) return;
 
-        const foundUser = userData.find((u) => u.email === user.email);
-        setCurrentUser(foundUser || null);
-        setMembershipStatus(foundUser?.membership || "no");
+        setCurrentUser(userData);
+        setMembershipStatus(userData.membership || "no");
         setLoading(false);
     }, [user, userData]);
 
+    // Background wrapper component
+    const BackgroundWrapper = ({ children }) => (
+        <div className="relative min-h-screen flex items-center justify-center px-4 py-12">
+            {/* Always blurred background */}
+            <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${membershipBanner})`, filter: "blur(8px)" }}
+            />
+            <div className="absolute inset-0 bg-black/20"></div>
+            <div className="relative z-10 w-full max-w-xl">{children}</div>
+        </div>
+    );
+
+    // Loading skeleton
     if (loading || !currentUser) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p>Loading user info...</p>
-            </div>
+            <BackgroundWrapper>
+                <MembershipSkeleton />
+            </BackgroundWrapper>
         );
     }
 
     // Already a member
     if (membershipStatus === "yes") {
         return (
-            <div className="min-h-screen flex items-center justify-center px-4">
-                <div className="max-w-xl bg-white bg-opacity-90 shadow-2xl rounded-2xl p-8 text-center">
-                    <h2 className="text-2xl font-bold text-green-600 mb-4">You're already a member ✅</h2>
-                    <p className="text-gray-700">Your membership is active. Enjoy all the benefits!</p>
+            <BackgroundWrapper>
+                <div className="flex flex-col items-center justify-center relative">
+                    {/* Already member image */}
+                    <img
+                        src={alreadyMember}
+                        alt="Already a member"
+                        className="max-w-full w-[300px] md:w-[400px] rounded-lg mb-8"
+                    />
+
+                    {/* Success animation on top of image */}
+                    <div className="absolute -top-12 transform -translate-y-1/2">
+                        <Lottie
+                            loop={true}
+                            animationData={successAnimation}
+                            play
+                            style={{ width: 200, height: 200 }}
+                        />
+                    </div>
+
                 </div>
-            </div>
+            </BackgroundWrapper>
         );
     }
 
+    // Payment form for new member
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-indigo-100 flex items-center justify-center px-4 py-12">
-            <div className="w-full max-w-xl bg-white bg-opacity-90 shadow-2xl rounded-2xl p-8 backdrop-blur">
-                <h2 className="text-2xl font-bold text-red-600 mb-4 text-center">Pay $10 to Become a Member</h2>
-                <p className="text-gray-700 mb-4 text-center">After payment, your membership will be activated.</p>
+        <BackgroundWrapper>
+            <div className="w-full max-w-xl bg-green-100/90 shadow-lg rounded-2xl p-8">
+                <h2 className="text-2xl font-bold text-[#22c55e] mb-4 text-center">
+                    Pay $10 to Become a Member
+                </h2>
+                <p className="text-gray-700 mb-4 text-center">
+                    After payment, your membership will be activated.
+                </p>
                 <Elements stripe={stripePromise}>
                     <CheckoutForm
                         price={price}
                         user={currentUser}
                         onMembershipUpdate={(status) => {
-                            setMembershipStatus(status);           // update component immediately
-                            updateMembership(currentUser.email, status); // update AuthProvider globally
+                            setMembershipStatus(status);
+                            updateMembership(currentUser.email, status);
                         }}
                     />
                 </Elements>
             </div>
-        </div>
+        </BackgroundWrapper>
     );
 };
 

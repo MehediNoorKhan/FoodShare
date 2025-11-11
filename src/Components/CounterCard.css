@@ -1,0 +1,113 @@
+.card-effect {
+  perspective: 1000px;
+}
+
+.card-inner {
+  --card-bg: #ffffff;
+  --card-accent: #2ecc71; /* Green Accent for outline */
+  --card-text: #1b4332; /* Dark Green Text */
+  --card-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+
+  width: 220px;
+  height: 200px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.6s cubic-bezier(0.23, 1, 0.32, 1), border 0.3s ease-in-out;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.3); /* default border */
+  transform-style: preserve-3d;
+}
+
+/* Hover effect: remove green fill, add green outline */
+.card-inner:hover {
+  transform: rotateY(10deg) rotateX(10deg) translateZ(10px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--card-accent); /* green outline */
+  background: var(--card-bg); /* stay white */
+}
+
+.card__liquid {
+  position: absolute;
+  top: -80px;
+  left: 0;
+  width: 300px;
+  height: 200px;
+  background: #a3e635; /* Soft Green Glow */
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0;
+  transition: 0.7s ease;
+}
+
+.card-inner:hover .card__liquid {
+  opacity: 0; /* fully hidden */
+  transform: translateY(30px) scale(1.2); /* can keep transform if needed */
+}
+
+.card__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.card-inner:hover .card__shine {
+  opacity: 1;
+  animation: shine 2s infinite linear;
+}
+
+/* Icon animation: fade in + scale from 0 */
+.card__icon {
+  font-size: 3rem; /* adjust size */
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  transform: scale(0);
+  animation: icon-appear 0.8s forwards;
+}
+
+@keyframes icon-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Optional: delay icons per card */
+.card-inner:nth-child(1) .card__icon {
+  animation-delay: 0.2s;
+}
+.card-inner:nth-child(2) .card__icon {
+  animation-delay: 0.4s;
+}
+.card-inner:nth-child(3) .card__icon {
+  animation-delay: 0.6s;
+}
+.card-inner:nth-child(4) .card__icon {
+  animation-delay: 0.8s;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}

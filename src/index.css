@@ -1,2 +1,21 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+:root {
+  --primary: #ffffff;
+  --lightgreen: #22c55e;
+  --deepgreen: #24725e;
+}
+.text-lightgreen {
+  color: var(--lightgreen);
+}
+.bg-lightgreen {
+  background-color: var(--lightgreen);
+}
+
+.text-deepgreen {
+  color: var(--deepgreen);
+}
+.bg-deepgreen {
+  background-color: var(--deepgreen);
+}

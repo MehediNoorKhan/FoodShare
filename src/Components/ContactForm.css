@@ -1,0 +1,237 @@
+/* =====================
+   CONTACT FORM SECTION
+===================== */
+
+.contact-container {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  height: auto; /* height adjusts to content */
+  align-items: stretch; /* ensures image & form are equal height */
+}
+
+/* =====================
+   IMAGE SECTION
+===================== */
+.contact-image {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* =====================
+   FORM SECTION
+===================== */
+.contact-form-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #dcfce7; /* Tailwind green-50 */
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  padding: 25px 20px;
+}
+
+.contact-form-wrapper form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 25px 20px;
+  width: 90%;
+  max-width: 450px;
+  margin: 0 auto;
+  margin-top: 8px;
+  gap: 4px;
+  border-top: 1px solid #22c55e;
+  border-bottom: 1px solid #22c55e;
+  border-right: 1px solid #22c55e;
+  border-left: 1px solid #22c55e;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* FORM HEADING */
+.contact-form h2 {
+  margin-bottom: 15px;
+  color: #22c55e;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+/* =====================
+   SOCIAL ICONS
+===================== */
+.social-icons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.button {
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button svg {
+  color: white;
+  width: 28px;
+  height: 28px;
+  z-index: 9;
+}
+
+/* Button gradient backgrounds */
+.btn-1 {
+  background: linear-gradient(120deg, #833ab4, #fd1d1d, #fcb045);
+}
+.btn-2 {
+  background: linear-gradient(120deg, #02ff2c, #008a12);
+}
+.btn-3 {
+  background: rgb(69, 187, 255);
+}
+.btn-4 {
+  background: rgb(255, 33, 33);
+}
+.btn-5 {
+  background: black;
+}
+
+.button:active {
+  transform: scale(0.85);
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  background-color: #212121;
+  border-radius: 50px;
+  z-index: -1;
+  transition: 0.4s;
+}
+
+.button:hover::before {
+  width: 0;
+  height: 0;
+}
+
+/* =====================
+   HOVER ANIMATION FOR SOCIAL BUTTONS
+===================== */
+.button:hover {
+  transform: translateY(-5px) scale(1.1);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* =====================
+   FORM INPUTS
+===================== */
+.contact-form label {
+  margin-bottom: 3px;
+  color: #065f46;
+  font-weight: 500;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #a7f3d0;
+  outline: none;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: #065f46;
+  transition: all 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.contact-form input,
+.contact-form textarea {
+  background-color: white;
+  color: #065f46; /* optional text color */
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #22c55e; /* greenish placeholder */
+  opacity: 1; /* ensures the color shows properly */
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #16a34a;
+  backdrop-filter: blur(2px);
+}
+
+/* =====================
+   SUBMIT BUTTON
+===================== */
+.contact-form button.contact-submit {
+  background: #22c55e;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.contact-form button.contact-submit:hover {
+  background: #16a34a;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 768px) {
+  .contact-container {
+    flex-direction: column;
+    margin: 1rem auto;
+  }
+
+  .contact-image img {
+    border-radius: 1.5rem 1.5rem 0 0;
+    height: auto;
+  }
+
+  .contact-form-wrapper {
+    border-radius: 1.5rem;
+    padding: 20px;
+  }
+
+  .contact-form-wrapper form {
+    width: 95%;
+    max-width: 100%;
+  }
+
+  .social-icons {
+    justify-content: flex-start;
+  }
+}

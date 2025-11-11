@@ -4,6 +4,8 @@ import FeaturedFoods from './FeaturedFoods';
 import AnimatedCounter from './AnimatedCounter';
 import FAQSection from './FAQSection';
 import FeaturesSection from './FeaturesSection';
+import Reviews from './Reviews';
+import ContactForm from './ConactForm';
 
 const Home = () => {
     return (
@@ -11,8 +13,11 @@ const Home = () => {
             <Banner></Banner>
             <FeaturesSection></FeaturesSection>
             <FeaturedFoods></FeaturedFoods>
-            <AnimatedCounter></AnimatedCounter>
+            {/* <AnimatedCounter></AnimatedCounter> */}
+            <Reviews></Reviews>
             <FAQSection></FAQSection>
+            <ContactForm></ContactForm>
+
         </div>
     );
 };

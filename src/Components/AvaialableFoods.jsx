@@ -75,8 +75,8 @@ const AvailableFoods = () => {
     };
 
     return (
-        <section className="bg-green-50">
-            <div className="max-w-7xl mx-auto px-4 py-16">
+        <section className="bg-green-50 pt-24 relative z-0">
+            <div className="max-w-7xl mx-auto px-16 py-16">
                 <h1 className="text-4xl font-extrabold text-[#24725e] text-center mt-8 mb-12">
                     Available Foods
                 </h1>

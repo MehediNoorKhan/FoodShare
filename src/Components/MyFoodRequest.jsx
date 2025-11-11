@@ -33,13 +33,16 @@ const MyFoodRequest = () => {
             });
     }, [user]);
 
-    if (loading) return <MyFoodRequestSkeleton rows={foodsPerPage} />;
-
     const totalPages = Math.ceil(requests.length / foodsPerPage);
     const paginatedFoods = requests.slice(
         (currentPage - 1) * foodsPerPage,
         currentPage * foodsPerPage
     );
+
+    const skeletonRows = loading ? foodsPerPage : paginatedFoods.length;
+
+    if (loading) return <MyFoodRequestSkeleton rows={skeletonRows} />;
+
 
     const handleCancel = (id) => {
         Swal.fire({
@@ -87,6 +90,7 @@ const MyFoodRequest = () => {
 
 
 
+
     return (
         <motion.div
             className="p-6 max-w-7xl mx-auto mt-10"
@@ -106,12 +110,13 @@ const MyFoodRequest = () => {
                     </div>
 
                     {/* Message */}
-                    <p className="text-green-800 text-lg font-semibold text-center">
+                    <p className="text-green-800 text-2xl font-semibold text-center">
                         You haven't requested for any food
                     </p>
 
                     {/* Explore Foods Button */}
-                    <div className="flex justify-center mt-4">
+                    <div className="flex justify-center items-center gap-3 pb-8">
+                        <p className="text-[#22c55e] text-2xl">To Request for food </p>
                         <Link to="/availablefood">
                             <button className="seemorebutton">
                                 <span className="button__icon-wrapper">
@@ -128,7 +133,7 @@ const MyFoodRequest = () => {
                                         ></path>
                                     </svg>
                                 </span>
-                                Explore All
+                                Explore Foods
                             </button>
                         </Link>
                     </div>

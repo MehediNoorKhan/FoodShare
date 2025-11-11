@@ -1,105 +1,181 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Lottie from "lottie-react";
 import { FaChevronDown } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
+import faqAnimation from '../../assets/FAQ.json';
 
 const faqs = [
   {
-    question: "How do I host a food drive?",
+    question: "How can I share my excess food?",
     answer:
-      "Hosting a food drive involves choosing a location, promoting it, setting clear donation guidelines, and partnering with a local food bank for pickup or delivery.",
+      "List your available food items on our platform. Specify quantity, location, and expiry, and interested users can request them.",
   },
   {
-    question: "What should I donate to a food bank?",
+    question: "How do I request food?",
     answer:
-      "Shelf-stable items like canned vegetables, pasta, rice, peanut butter, and baby food are excellent donations. Check expiry dates before donating.",
+      "Browse available food items, select what you need, and submit a request. The donor will be notified to coordinate pickup.",
   },
   {
-    question: "What should I not donate to a food bank?",
+    question: "Is there any cost involved?",
     answer:
-      "Avoid donating expired items, perishable goods, open packages, and homemade food unless explicitly requested by the food bank.",
+      "No, our platform is free for both donors and recipients to reduce food waste and help those in need.",
   },
   {
-    question: "Should I donate cash or cans?",
+    question: "Can I donate perishable food?",
     answer:
-      "Both are helpful, but cash allows food banks to buy exactly what they need and cover operational costs. It can often be more efficient.",
+      "Yes, ensure it is safe to consume, properly packaged, and will be picked up before expiration.",
   },
   {
-    question: "Can I donate food to Feeding America?",
+    question: "How do I ensure food safety?",
     answer:
-      "Yes, Feeding America accepts both food and monetary donations. They work with local food banks to distribute your contributions effectively.",
+      "Always package food properly, label it clearly, and only donate fresh, safe-to-eat items.",
   },
 ];
 
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1200); // simulate loading
+    return () => clearTimeout(timer);
+  }, []);
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <section className="py-20 bg-orange-50 px-6 md:px-16">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-        {/* Left div */}
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl font-bold text-orange-700 mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-gray-700 mb-4 text-lg leading-relaxed">
-            Food banks, food pantries, and soup kitchens accept food donations.
-            But they have their own rules for how they accept donations and what
-            they accept. Below are some common ways to donate:
-          </p>
-          <ul className="list-disc pl-5 text-gray-700 space-y-2">
-            <li>
-              Check local food banks’ accepted items list before donating.
-            </li>
-            <li>Organize community drives to gather support efficiently.</li>
-            <li>Ensure all items are unopened and within expiration date.</li>
-            <li>Cash donations often help cover food and operational needs.</li>
-            <li>Volunteer to help sort or distribute food donations.</li>
-          </ul>
-        </motion.div>
+    <section className="relative py-24 bg-green-50 px-6 md:px-16 overflow-hidden">
+      {/* Background animation */}
+      <div className="absolute inset-0 flex justify-center items-center opacity-20 pointer-events-none">
+        <Lottie animationData={faqAnimation} loop={true} className="w-full max-w-2xl" />
+      </div>
 
-        {/* Right div - Accordion */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <div className="bg-white rounded-xl shadow-md divide-y">
-            {faqs.map((item, index) => (
-              <div key={index} className="p-5">
-                <button
-                  onClick={() => toggleAccordion(index)}
-                  className="flex justify-between items-center w-full font-semibold text-left text-gray-800 text-lg"
-                >
-                  {item.question}
-                  <FaChevronDown
-                    className={`ml-2 transform transition-transform duration-300 ${openIndex === index ? "rotate-180" : ""
-                      }`}
-                  />
-                </button>
-                {openIndex === index && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="text-gray-600 mt-3 text-sm leading-relaxed"
-                  >
-                    {item.answer}
-                  </motion.div>
-                )}
-              </div>
+      {/* Content overlay */}
+      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+        {/* Left text content */}
+        {loading ? (
+          <div className="space-y-4 z-10">
+            <div className="h-10 w-64 bg-gray-300 rounded animate-pulse"></div>
+            <div className="h-4 w-96 bg-gray-300 rounded animate-pulse"></div>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="h-6 w-full max-w-md bg-gray-300 rounded animate-pulse"></div>
             ))}
           </div>
-        </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-left z-10"
+          >
+            <h2 className="text-4xl font-bold text-deepgreen mb-4">
+              Frequently Asked Questions
+            </h2>
+
+            <p className="text-gray-700 mb-6 text-lg leading-relaxed">
+              Our food sharing platform helps reduce waste and connect people who want to
+              share food with those who need it. Here are some helpful points to get
+              started:
+            </p>
+
+            <motion.ul
+              className="space-y-4"
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    delayChildren: 0.3,
+                    staggerChildren: 0.15,
+                  },
+                },
+              }}
+            >
+              {[
+                "Ensure food items are safe and properly packaged.",
+                "Communicate clearly with donors or recipients for smooth pickup.",
+                "Check expiration dates before sharing or accepting food.",
+                "You may also offer small donations to support platform operations.",
+                "Volunteering helps support the food-sharing community.",
+              ].map((text, index) => (
+                <motion.li
+                  key={index}
+                  variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
+                  className="flex items-start gap-3"
+                >
+                  <div className="w-7 h-7 flex items-center justify-center bg-lightgreen text-white rounded-full shadow-md">
+                    <FaCheck size={14} />
+                  </div>
+                  <span className="text-gray-700 text-base leading-relaxed">
+                    {text}
+                  </span>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.div>
+        )}
+
+        {/* Right accordion */}
+        {loading ? (
+          <div className="space-y-4 z-10">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-16 bg-gray-300 rounded-lg animate-pulse w-full"
+              ></div>
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="z-10"
+          >
+            <div className="bg-transparent rounded-xl divide-y">
+              {faqs.map((item, index) => (
+                <div
+                  key={index}
+                  className={`p-4 transition-shadow transition-transform duration-300 rounded-lg mb-3
+                    border border-[#22c55e] bg-white/[0.02] backdrop-blur-sm
+                    hover:shadow-lg hover:-translate-y-0.5
+                    ${openIndex === index ? "ring-2 ring-green-100 bg-white/10" : ""}`}
+                >
+                  <button
+                    onClick={() => toggleAccordion(index)}
+                    className="flex justify-between items-center w-full font-semibold text-left text-deepgreen text-lg"
+                  >
+                    {item.question}
+                    <FaChevronDown
+                      className={`ml-2 transform transition-transform duration-300 ${openIndex === index ? "rotate-180" : ""
+                        }`}
+                    />
+                  </button>
+
+                  {openIndex === index && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="text-gray-700 mt-3 text-sm leading-relaxed"
+                    >
+                      {item.answer}
+                    </motion.div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
       </div>
     </section>
   );

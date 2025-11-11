@@ -33,6 +33,7 @@ const slides = [
 
 const Banner = () => {
     const [current, setCurrent] = useState(0);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -41,22 +42,42 @@ const Banner = () => {
         return () => clearInterval(interval);
     }, []);
 
+    // Simulate image loading
+    useEffect(() => {
+        const img = new Image();
+        img.src = slides[current].image;
+        img.onload = () => setLoading(false);
+    }, [current]);
+
     const { image, heading, subheading, buttonText, buttonLink } = slides[current];
 
     return (
         <div className="relative w-full h-[80vh]">
-            <img src={image} alt="Slide" className="w-full h-full object-cover" />
+            {loading ? (
+                // Skeleton loader
+                <div className="w-full h-full bg-gray-300 animate-pulse relative">
+                    <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center px-4">
+                        <div className="h-10 w-64 bg-gray-400 rounded mb-4 animate-pulse"></div>
+                        <div className="h-6 w-96 bg-gray-400 rounded mb-4 animate-pulse"></div>
+                        <div className="h-10 w-40 bg-gray-500 rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    <img src={image} alt="Slide" className="w-full h-full object-cover" />
 
-            <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center text-white px-4">
-                <h1 className="text-5xl sm:text-2xl md:text-5xl font-bold mb-4">{heading}</h1>
-                <p className="text-lg md:text-2xl mb-6 max-w-2xl">{subheading}</p>
-                <Link
-                    to={buttonLink}
-                    className="bg-[#22c55e] hover:bg-[#24725e] px-6 py-3 rounded-full text-lg font-semibold shadow-lg transition"
-                >
-                    {buttonText}
-                </Link>
-            </div>
+                    <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center text-white px-4">
+                        <h1 className="text-5xl sm:text-2xl md:text-5xl font-bold mb-4">{heading}</h1>
+                        <p className="text-lg md:text-2xl mb-6 max-w-2xl">{subheading}</p>
+                        <Link
+                            to={buttonLink}
+                            className="bg-[#22c55e] hover:bg-[#24725e] px-6 py-3 rounded-full text-lg font-semibold shadow-lg transition"
+                        >
+                            {buttonText}
+                        </Link>
+                    </div>
+                </>
+            )}
 
             {/* Slider Dots */}
             <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex space-x-2">
@@ -65,8 +86,8 @@ const Banner = () => {
                         key={i}
                         onClick={() => setCurrent(i)}
                         className={`rounded-full transition-all duration-300 ${i === current
-                            ? "w-6 h-3 bg-[#22c55e]" // active: wider and colorful
-                            : "w-3 h-3 bg-white/50" // inactive: small and semi-transparent
+                                ? "w-6 h-3 bg-[#22c55e]" // active: wider and colorful
+                                : "w-3 h-3 bg-white/50" // inactive: small and semi-transparent
                             }`}
                     />
                 ))}
