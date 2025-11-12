@@ -8,6 +8,7 @@ import { CiCalendarDate } from "react-icons/ci";
 import { GoLocation } from "react-icons/go";
 import { MdOutlineInventory } from "react-icons/md";
 import AOS from "aos";
+import AvailableFoodSkeleton from "../Skeletons/AvailableFoodSkeleton";
 
 const AvailableFoods = () => {
     const [foods, setFoods] = useState([]);
@@ -128,11 +129,7 @@ const AvailableFoods = () => {
 
                 {/* Food Cards */}
                 {loading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                        {Array(8).fill(0).map((_, idx) => (
-                            <div key={idx} className="bg-gray-200 rounded-2xl animate-pulse h-80" />
-                        ))}
-                    </div>
+                    <AvailableFoodSkeleton count={8}></AvailableFoodSkeleton>
                 ) : foods.length === 0 ? (
                     <div className="flex flex-col items-center justify-center mt-12">
                         <Lottie animationData={noDataAnimation} loop className="w-64 h-64" />

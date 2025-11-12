@@ -487,8 +487,8 @@ const ManageFood = () => {
             ) : (
                 <>
                     {/* ✅ Table */}
-                    <div className="overflow-x-auto rounded-lg shadow-lg border border-lightgreen">
-                        <table className="table-auto w-full border-collapse border border-lightgreen">
+                    <div className="overflow-x-auto rounded-lg">
+                        <table className="table-auto w-full">
                             <thead className="bg-lightgreen text-deepgreen">
                                 <tr className="space-x-2">
                                     <th className="p-4 md:p-2 text-left">Food</th>
