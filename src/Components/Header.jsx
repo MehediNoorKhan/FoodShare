@@ -48,7 +48,7 @@ const Header = () => {
                         className={`text-2xl font-bold transition-colors duration-500 ${scrolled ? "text-[#22c55e]" : "text-white"
                             }`}
                     >
-                        Food Zone
+                        FoodZone
                     </NavLink>
 
                     {/* Desktop nav */}
