@@ -11,9 +11,16 @@ import MembershipSkeleton from "../Skeletons/MembershipSkeleton";
 import Lottie from "lottie-react";
 import { motion } from "framer-motion";
 
+// Stripe public key
 const stripePromise = loadStripe(
     "pk_test_51RuFCD2N3HoHVSaoW7VxBVoMp4Wc4REQrh0EnYlar3Ej52hF8hs2Xe1f4BbY7Dfq5AhLPvcHpLSUwVzdVKVPi9lA00F7nQdlAE"
 );
+
+// Base URL for API
+const BASE_URL =
+    import.meta.env.MODE === "development"
+        ? "https://assignment11-b015f.web.app"
+        : "https://foodhub-amber.vercel.app";
 
 // ----- Checkout Form Component -----
 const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
@@ -28,7 +35,7 @@ const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
 
         setInitLoading(true);
         axios
-            .post("http://localhost:5000/create-payment-intent", { price })
+            .post(`${BASE_URL}/create-payment-intent`, { price })
             .then((res) => setClientSecret(res.data.clientSecret))
             .catch(() => toast.error("Failed to initialize payment."))
             .finally(() => setInitLoading(false));
@@ -60,16 +67,28 @@ const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
             }
 
             if (paymentIntent.status === "succeeded") {
-                toast.success("Payment Successful 🎉");
+                const paymentData = {
+                    email: user.email,
+                    amount: price,
+                    transactionId: paymentIntent.id,
+                    status: paymentIntent.status,
+                };
 
-                await axios.patch(`http://localhost:5000/users/membership/${user.email}`, {
+                // Save payment to DB
+                await axios.post(`${BASE_URL}/payments`, paymentData);
+
+                // Update membership in backend
+                await axios.patch(`${BASE_URL}/users/membership/${user.email}`, {
                     membership: "yes",
                 });
 
-                toast.success("Your membership is now active!");
-                onMembershipUpdate("yes");
+                // Update membership in context
+                if (onMembershipUpdate) onMembershipUpdate("yes");
+
+                toast.success("Payment successful! Membership activated 🎉");
             }
-        } catch {
+        } catch (err) {
+            console.error("Payment failed:", err);
             toast.error("Payment failed. Please try again.");
         } finally {
             setLoading(false);
@@ -143,7 +162,6 @@ const Membership = () => {
         </div>
     );
 
-    // Loading skeleton
     if (loading || !currentUser)
         return (
             <BackgroundWrapper>
@@ -151,7 +169,6 @@ const Membership = () => {
             </BackgroundWrapper>
         );
 
-    // Already a member
     if (membershipStatus === "yes")
         return (
             <BackgroundWrapper>
@@ -173,7 +190,6 @@ const Membership = () => {
             </BackgroundWrapper>
         );
 
-    // Payment form for new member
     return (
         <BackgroundWrapper>
             <motion.div
@@ -194,7 +210,7 @@ const Membership = () => {
                         user={currentUser}
                         onMembershipUpdate={(status) => {
                             setMembershipStatus(status);
-                            updateMembership(currentUser.email, status);
+                            updateMembership?.(currentUser.email, status);
                         }}
                     />
                 </Elements>

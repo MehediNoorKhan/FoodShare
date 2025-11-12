@@ -136,7 +136,7 @@ const Register = () => {
         try {
             await createUser(email, password);
             await logout();
-            await axios.post("http://localhost:5000/users", userinfos);
+            await axios.post("https://assignment11-b015f.web.app/users", userinfos);
 
             await Swal.fire({
                 icon: "success",
@@ -179,19 +179,26 @@ const Register = () => {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label className="label text-deepgreen">Name</label>
-                            <input type="text" name="name" className="input input-bordered w-full text-lightgreen" placeholder="Your Name" required />
+                            <input type="text" name="name" className="input input-bordered w-full dark:bg-white text-lightgreen" placeholder="Your Name" required />
                         </div>
                         <div>
                             <label className="label text-deepgreen">Email</label>
-                            <input type="email" name="email" className="input input-bordered w-full text-lightgreen" placeholder="Email" required />
+                            <input type="email" name="email" className="input input-bordered w-full dark:bg-white text-lightgreen" placeholder="Email" required />
                         </div>
                         <div>
                             <label className="label">Photo</label>
-                            <input type="file" accept="image/*" onChange={handleImageChange} className="input input-bordered w-full cursor-pointer" required />
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                className="input input-bordered w-full cursor-pointer dark:bg-lightgreen dark:text-white dark:placeholder-lightgreen placeholder-gray-500"
+                                required
+                            />
                         </div>
+
                         <div>
                             <label className="label text-deepgreen">Password</label>
-                            <input type="password" name="password" className="input input-bordered text-lightgreen w-full" placeholder="Password" required />
+                            <input type="password" name="password" className="input input-bordered text-lightgreen w-full dark:bg-white" placeholder="Password" required />
                         </div>
 
                         {ermsg && <p className="text-red-500 mt-1">{ermsg}</p>}
@@ -199,13 +206,13 @@ const Register = () => {
                         <button
                             type="submit"
                             disabled={!photourl || loading || imageLoading}
-                            className={`w-full mt-2 py-2 cursor-pointer rounded-md font-semibold text-white transition-colors ${photourl && !imageLoading ? "bg-[#22c55e] hover:bg-[#24725e]" : "bg-gray-400 cursor-not-allowed"}`}
+                            className={`w-full mt-2 py-2 cursor-pointer rounded-md font-semibold text-white transition-colors ${photourl && !imageLoading ? "bg-[#22c55e] hover:bg-[#24725e] dark:bg-[#22c55e] dark:hover:bg-[#24725e]" : "bg-gray-400 cursor-not-allowed dark:bg-gray-400 dark:cursor-not-allowed"}`}
                         >
                             {loading ? "Registering..." : "Register"}
                         </button>
                     </form>
 
-                    <div className="text-sm mt-4 text-center sm:text-left">
+                    <div className="text-sm mt-4 text-center sm:text-left dark:text-gray-600">
                         Already have an account?  <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
                     </div>
 

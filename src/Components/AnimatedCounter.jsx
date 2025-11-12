@@ -39,7 +39,7 @@ export default function AnimatedCounter() {
         {
             label: "Happy Recipients",
             value: 980,
-            icon: <FaSmile className="text-green-500 w-10 h-10 mb-2" />,
+            icon: <FaSmile className="text-lightgreen w-10 h-10 mb-2" />,
         },
         {
             label: "Active Volunteers",
@@ -61,7 +61,7 @@ export default function AnimatedCounter() {
             <motion.div
                 animate={{ opacity: [0.15, 0.35, 0.15], scale: [1, 1.25, 1] }}
                 transition={{ repeat: Infinity, duration: 7 }}
-                className="absolute bottom-0 right-0 w-80 h-80 bg-green-400 blur-3xl rounded-full"
+                className="absolute bottom-0 right-0 w-80 h-80 bg-lightgreen blur-3xl rounded-full"
             ></motion.div>
 
             {/* Heading */}
@@ -98,7 +98,7 @@ export default function AnimatedCounter() {
                             transition={{ duration: 0.6, delay: idx * 0.15 }}
                             className="relative group cursor-pointer"
                         >
-                            <div className="absolute inset-0 rounded-2xl bg-green-400 blur-2xl opacity-0 group-hover:opacity-30 transition"></div>
+                            <div className="absolute inset-0 rounded-2xl bg-lightgreen blur-2xl opacity-0 group-hover:opacity-30 transition"></div>
 
                             <motion.div
                                 whileHover={{ y: -10 }}

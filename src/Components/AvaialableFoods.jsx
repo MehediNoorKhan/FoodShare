@@ -27,7 +27,7 @@ const AvailableFoods = () => {
         const delayDebounce = setTimeout(async () => {
             setLoading(true);
             try {
-                const res = await axios.get("http://localhost:5000/available-foods", {
+                const res = await axios.get("https://assignment11-b015f.web.app/available-foods", {
                     params: { search: searchTerm },
                 });
 
@@ -96,7 +96,7 @@ const AvailableFoods = () => {
                             setSearchTerm(e.target.value);
                             setCurrentPage(1);
                         }}
-                        className="input input-bordered w-full md:w-96"
+                        className="input input-bordered w-full md:w-96 dark:bg-white dark:placeholder-green-300 dark:text-green-600"
                     />
 
                     <div
@@ -183,7 +183,7 @@ const AvailableFoods = () => {
 
                                 <div className="card__footer flex justify-center pt-4 pb-6 mx-2">
                                     <a href={`/fooddetails/${food._id}`} className="w-full">
-                                        <button className="card__button bg-[#22c55e] text-white rounded-full px-4 py-2 font-semibold hover:bg-green-600 w-full">
+                                        <button className="card__button bg-[#22c55e] text-white rounded-full cursor-pointer px-4 py-2 font-semibold hover:bg-deepgreen w-full">
                                             View Details
                                         </button>
                                     </a>

@@ -42,7 +42,7 @@ const PaymentSuccess = ({ loading = false }) => {
             transition={{ duration: 0.6 }}
         >
             <div className="bg-white shadow-lg rounded-2xl p-8 sm:p-10 max-w-md w-full">
-                <h2 className="text-2xl sm:text-3xl font-bold text-green-600 mb-4">
+                <h2 className="text-2xl sm:text-3xl font-bold text-deepgreen mb-4">
                     Payment Successful 🎉
                 </h2>
                 <p className="text-gray-700 text-sm sm:text-base mb-6">
@@ -50,7 +50,7 @@ const PaymentSuccess = ({ loading = false }) => {
                 </p>
                 <Link
                     to="/"
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 sm:px-8 sm:py-3 rounded-md transition"
+                    className="bg-deepgreen hover:bg-deepgreen text-white font-semibold px-6 py-2 sm:px-8 sm:py-3 rounded-md transition"
                 >
                     Go to Home
                 </Link>

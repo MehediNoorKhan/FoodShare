@@ -41,12 +41,23 @@ const AuthProvider = ({ children }) => {
         return signOut(auth);
     };
 
+    const updateMembership = async (email, status) => {
+        try {
+            await axios.patch(`https://assignment11-b015f.web.app/users/membership/${email}`, {
+                membership: status,
+            });
+            setUserData((prev) => ({ ...prev, membership: status }));
+        } catch (error) {
+            console.error("Failed to update membership:", error);
+        }
+    };
+
     // ✅ Fetch only the logged-in user's data
     // Retry version of fetching user data
     const fetchLoggedInUser = async (email, retries = 3, delay = 1000) => {
         for (let i = 0; i < retries; i++) {
             try {
-                const response = await axios.get(`http://localhost:5000/users/${email}`);
+                const response = await axios.get(`https://assignment11-b015f.web.app/users/${email}`);
                 if (response.data) {
                     setUserData(response.data);
                     setLoading(false); // ✅ Stop loading here
@@ -72,16 +83,15 @@ const AuthProvider = ({ children }) => {
             setUser(currentUser);
 
             if (currentUser?.email) {
-                fetchLoggedInUser(currentUser.email);
+                fetchLoggedInUser(currentUser.email).finally(() => setLoading(false));
             } else {
                 setUserData(null);
-                setLoading(false); // ✅ Important
+                setLoading(false);
             }
         });
 
         return () => unsubscribe();
     }, []);
-
 
 
 
@@ -94,6 +104,7 @@ const AuthProvider = ({ children }) => {
         logout,
         googleSignIn,
         setUser,
+        updateMembership
     };
 
     return (

@@ -28,7 +28,7 @@ export default function About() {
             <motion.div
                 animate={{ opacity: [0.12, 0.2, 0.12], x: [0, 20, 0] }}
                 transition={{ duration: 7, repeat: Infinity }}
-                className="absolute bottom-12 right-12 w-36 h-36 bg-green-400 rounded-full blur-3xl"
+                className="absolute bottom-12 right-12 w-36 h-36 bg-lightgreen rounded-full blur-3xl"
             />
 
             {/* Section Header */}
@@ -46,10 +46,10 @@ export default function About() {
                     viewport={{ once: true }}
                     className="text-center mb-14"
                 >
-                    <p className="text-green-600 font-semibold uppercase mb-2">
+                    <p className="text-deepgreen font-semibold uppercase mb-2">
                         About Our Mission
                     </p>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-green-900">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-deepgreen">
                         Connecting Food. Connecting Hearts.
                     </h2>
                     <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto mt-4">
@@ -102,7 +102,7 @@ export default function About() {
                             viewport={{ once: true }}
                             className="space-y-6 text-gray-700"
                         >
-                            <h3 className="text-2xl sm:text-3xl font-semibold text-green-700">
+                            <h3 className="text-2xl sm:text-3xl font-semibold text-deepgreen">
                                 A Simple Step with a Lasting Impact.
                             </h3>
                             <p className="text-base md:text-lg leading-relaxed">
@@ -122,7 +122,7 @@ export default function About() {
                                         whileHover={{ scale: 1.03 }}
                                         className="flex items-center gap-3"
                                     >
-                                        <span className="w-8 h-8 rounded-full bg-green-200 flex items-center justify-center text-green-700 font-semibold shadow-md">
+                                        <span className="w-8 h-8 rounded-full bg-green-200 flex items-center justify-center text-deepgreen font-semibold shadow-md">
                                             ✓
                                         </span>
                                         {text}
@@ -160,7 +160,7 @@ export default function About() {
                                 whileHover={{ scale: 1.08 }}
                                 transition={{ duration: 0.5 }}
                             />
-                            <h4 className="text-xl font-bold text-green-700 group-hover:underline">
+                            <h4 className="text-xl font-bold text-deepgreen group-hover:underline">
                                 {card.title}
                             </h4>
                             <p className="text-gray-600 mt-2">{card.desc}</p>

@@ -43,7 +43,7 @@ const FoodDetails = () => {
         };
 
         try {
-            const res = await axios.post("http://localhost:5000/requestfoods", requestData);
+            const res = await axios.post("https://assignment11-b015f.web.app/requestfoods", requestData);
             if (res.data.success) {
                 Swal.fire({
                     icon: "success",
@@ -85,26 +85,26 @@ const FoodDetails = () => {
                         <img src={food.foodImage} alt={food.foodName} className="w-full h-full object-cover" />
                     </div>
 
-                    <p className="text-2xl font-bold text-green-400">{food.foodName}</p>
+                    <p className="text-2xl font-bold text-lightgreen">{food.foodName}</p>
 
                     <p className="flex items-center gap-2 text-gray-200">
-                        <MdOutlineInventory className="text-green-400 w-5 h-5" />
+                        <MdOutlineInventory className="text-lightgreen w-5 h-5" />
                         <strong className="text-gray-300">Quantity:</strong> {food.foodQuantity}
                     </p>
 
                     <p className="flex items-center gap-2 text-gray-200">
-                        <GoLocation className="text-green-400 w-5 h-5" />
+                        <GoLocation className="text-lightgreen w-5 h-5" />
                         <strong className="text-gray-300">Pickup Location:</strong> {food.pickupLocation}
                     </p>
 
                     <p className="flex items-center gap-2 text-gray-200">
-                        <CiCalendarDate className="text-green-400 w-5 h-5" />
+                        <CiCalendarDate className="text-lightgreen w-5 h-5" />
                         <strong className="text-gray-300">Expires:</strong>{" "}
                         {new Date(food.expiredDateTime).toLocaleString()}
                     </p>
 
                     <p className="flex items-center gap-2 text-gray-200">
-                        <FaUserAlt className="text-green-400 w-5 h-5" />
+                        <FaUserAlt className="text-lightgreen w-5 h-5" />
                         <strong className="text-gray-300">Donated by:</strong> {food.donorName}
                     </p>
 
@@ -114,7 +114,7 @@ const FoodDetails = () => {
 
                     <button
                         onClick={() => setShowModal(true)}
-                        className="mt-4 bg-lightgreen text-white px-5 py-3 rounded-lg hover:bg-lightgreen shadow-md transition-all"
+                        className="mt-4 bg-lightgreen text-white px-5 py-3 rounded-lg cursor-pointer hover:bg-lightgreen shadow-md transition-all"
                     >
                         Request
                     </button>
@@ -137,7 +137,7 @@ const FoodDetails = () => {
                     >
                         <button
                             onClick={() => setShowModal(false)}
-                            className="absolute top-3 right-3 text-red-500 hover:text-red-700"
+                            className="absolute top-3 right-3 cursor-pointer text-red-500 hover:text-red-700"
                         >
                             <FaTimes className="w-6 h-6" />
                         </button>
@@ -184,7 +184,7 @@ const FoodDetails = () => {
 
                         <button
                             onClick={handleRequest}
-                            className="px-6 py-2 bg-lightgreen text-white font-semibold rounded hover:bg-green-700 transition mt-4 w-full"
+                            className="px-6 py-2 bg-lightgreen text-white cursor-pointer font-semibold rounded hover:bg-deepgreen transition mt-4 w-full"
                         >
                             Submit Request
                         </button>

@@ -60,10 +60,10 @@ const Header = () => {
                                 className={({ isActive }) =>
                                     `relative group transition-colors duration-300 ${isActive
                                         ? scrolled
-                                            ? "text-green-500 font-semibold underline" // Active & scrolled: green
+                                            ? "text-lightgreen font-semibold underline" // Active & scrolled: green
                                             : "text-white font-semibold underline"     // Active & not scrolled: white
                                         : scrolled
-                                            ? "text-gray-500 hover:text-green-500"    // Inactive & scrolled
+                                            ? "text-gray-500 hover:text-lightgreen"    // Inactive & scrolled
                                             : "text-white hover:text-gray-500"        // Inactive & not scrolled
                                     }`
                                 }
@@ -114,7 +114,7 @@ const Header = () => {
                             <>
                                 <NavLink to="/login">
                                     <button
-                                        className={`px-4 py-1 rounded-md transition-colors duration-300 ${scrolled
+                                        className={`px-4 py-1 rounded-md transition-colors cursor-pointer duration-300 ${scrolled
                                             ? "bg-[#22c55e] text-white hover:bg-[#24725e]"
                                             : "bg-white text-[#22c55e] hover:bg-green-100"
                                             }`}
@@ -124,7 +124,7 @@ const Header = () => {
                                 </NavLink>
                                 <NavLink to="/register">
                                     <button
-                                        className={`px-4 py-1 rounded-md border-2 transition-colors duration-300 ${scrolled
+                                        className={`px-4 py-1 rounded-md border-2 transition-colors cursor-pointer duration-300 ${scrolled
                                             ? "border-[#22c55e] text-[#22c55e] hover:bg-[#22c55e] hover:text-white"
                                             : "border-white text-white hover:bg-white hover:text-[#22c55e]"
                                             }`}

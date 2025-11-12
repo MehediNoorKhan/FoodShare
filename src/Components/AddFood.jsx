@@ -19,7 +19,7 @@ const AddFood = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/users/${user?.email}`);
+                const res = await axios.get(`https://assignment11-b015f.web.app/users/${user?.email}`);
                 setPostCount(res.data?.post || 0);
             } catch (err) {
                 console.error(err);
@@ -106,7 +106,7 @@ const AddFood = () => {
                 createdAt: new Date(),
             };
 
-            await axios.post("http://localhost:5000/food", foodData);
+            await axios.post("https://assignment11-b015f.web.app/food", foodData);
 
             Swal.fire("Added!", "Food added successfully ✅", "success");
             navigate("/availablefood");
@@ -140,21 +140,21 @@ const AddFood = () => {
                     className="group relative ml-4 cursor-pointer"
                 >
                     <div
-                        className="absolute -inset-1 rounded-xl bg-gradient-to-r from-green-500 to-green-700 opacity-75 blur transition duration-300 group-hover:opacity-100"
+                        className="absolute -inset-1 rounded-xl bg-gradient-to-r from-lightgreen to-deepgreen opacity-75 blur transition duration-300 group-hover:opacity-100"
                     ></div>
                     <div
-                        className="absolute -inset-1 rounded-xl bg-gradient-to-r from-green-500 to-green-700 opacity-75 blur transition duration-300 group-hover:opacity-100 animation-delay-200"
+                        className="absolute -inset-1 rounded-xl bg-gradient-to-r from-lightgreen to-deepgreen opacity-75 blur transition duration-300 group-hover:opacity-100 animation-delay-200"
                     ></div>
 
                     <span
                         className="relative flex items-center gap-3 rounded-lg bg-black px-7 py-3 leading-none"
                     >
                         <span
-                            className="inline-block h-3 w-3 rounded-full bg-gradient-to-tr from-green-400 to-green-600 opacity-80 shadow-lg shadow-green-500/50 transition-all duration-300 group-hover:scale-125"
+                            className="inline-block h-3 w-3 rounded-full bg-gradient-to-tr from-lightgreen to-deepgreen opacity-80 shadow-lg shadow-lightgreen/50 transition-all duration-300 group-hover:scale-125"
                         ></span>
 
                         <span className="inline-flex flex-col gap-1">
-                            <span className="text-sm font-medium text-green-400">Be a Member</span>
+                            <span className="text-sm font-medium text-lightgreen">Be a Member</span>
                             <span className="text-[10px] font-light tracking-wider text-green-300/80">
                                 UNLOCK ALL FEATURES
                             </span>
@@ -164,7 +164,7 @@ const AddFood = () => {
                             className="ml-auto transform transition-transform duration-300 group-hover:translate-x-1"
                         >
                             <svg
-                                className="h-5 w-5 text-green-400"
+                                className="h-5 w-5 text-lightgreen"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -179,7 +179,7 @@ const AddFood = () => {
                         </span>
 
                         <div
-                            className="absolute -bottom-2 left-1/2 h-px w-5/6 -translate-x-1/2 bg-gradient-to-r from-transparent via-green-500 to-transparent opacity-50 blur-sm transition-all duration-300 group-hover:w-full"
+                            className="absolute -bottom-2 left-1/2 h-px w-5/6 -translate-x-1/2 bg-gradient-to-r from-transparent via-lightgreen to-transparent opacity-50 blur-sm transition-all duration-300 group-hover:w-full"
                         ></div>
                     </span>
                 </button>
@@ -196,7 +196,7 @@ const AddFood = () => {
         >
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-            <div className="relative w-full max-w-md bg-white/10 border border-green-500 backdrop-blur-md rounded-2xl p-8 shadow-lg shadow-green-400/50">
+            <div className="relative w-full max-w-md bg-white/10 border border-lightgreen backdrop-blur-md rounded-2xl p-8 shadow-lg shadow-lightgreen/50">
                 <h2 className="text-3xl font-bold text-center text-green-300 mb-6">
                     Add Food
                 </h2>
@@ -211,7 +211,7 @@ const AddFood = () => {
                             name="foodName"
                             required
                             placeholder="Food Name"
-                            className="input input-bordered w-full border-green-500 bg-white/40 text-black"
+                            className="input input-bordered w-full border-lightgreen bg-white/40 text-black"
                         />
 
                         <input
@@ -219,7 +219,7 @@ const AddFood = () => {
                             name="quantity"
                             required
                             placeholder="Food Quantity"
-                            className="input input-bordered w-full border-green-500 bg-white/40 text-black"
+                            className="input input-bordered w-full border-lightgreen bg-white/40 text-black"
                         />
 
                         <input
@@ -227,14 +227,14 @@ const AddFood = () => {
                             name="pickupLocation"
                             required
                             placeholder="Pickup Location"
-                            className="input input-bordered w-full border-green-500 bg-white/40 text-black"
+                            className="input input-bordered w-full border-lightgreen bg-white/40 text-black"
                         />
 
                         <input
                             type="datetime-local"
                             name="expireDate"
                             required
-                            className="input input-bordered w-full border-green-500 bg-white/40 text-black"
+                            className="input input-bordered w-full border-lightgreen bg-white/40 text-black"
                         />
 
                         {imageUploading ? (
@@ -245,20 +245,20 @@ const AddFood = () => {
                                 name="foodImage"
                                 accept="image/*"
                                 required
-                                className="file-input file-input-bordered w-full border-green-500 bg-white/40 text-black"
+                                className="file-input file-input-bordered w-full border-lightgreen bg-white/40 text-black"
                             />
                         )}
 
                         <textarea
                             name="additionalNotes"
                             placeholder="Additional Notes (optional)"
-                            className="textarea textarea-bordered w-full border-green-500 bg-white/40 text-black"
+                            className="textarea textarea-bordered w-full border-lightgreen bg-white/40 text-black"
                         />
 
                         <button
                             type="submit"
                             disabled={loading || imageUploading}
-                            className={`btn w-full bg-green-500 hover:bg-green-600 text-white font-semibold ${loading || imageUploading ? "cursor-not-allowed opacity-60" : ""}`}
+                            className={`btn w-full bg-lightgreen hover:bg-deepgreen text-white font-semibold ${loading || imageUploading ? "cursor-not-allowed opacity-60" : ""}`}
                         >
                             {imageUploading ? "Uploading Image..." : loading ? "Submitting..." : "Add Food"}
                         </button>

@@ -8,7 +8,7 @@ const AddFoodSkeleton = () => {
             <div className="h-12 bg-white/30 rounded"></div>
             <div className="h-12 bg-white/30 rounded"></div>
             <div className="h-24 bg-white/30 rounded"></div>
-            <div className="h-12 bg-green-500/60 rounded"></div>
+            <div className="h-12 bg-lightgreen/60 rounded"></div>
         </div>
     );
 };

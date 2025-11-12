@@ -3,7 +3,7 @@ import auth from '../Firebase/firebase.init';
 import { getIdToken } from 'firebase/auth';
 
 const axiosSecure = axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: 'https://assignment11-b015f.web.app',
     withCredentials: true,
 });
 
@@ -15,6 +15,7 @@ axiosSecure.interceptors.request.use(async (config) => {
     }
     return config;
 }, (error) => {
+
     return Promise.reject(error);
 });
 

@@ -82,7 +82,7 @@ const MyFoodRequest = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
         >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl mt-8 font-extrabold text-green-700 mb-12 text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl mt-8 font-extrabold text-deepgreen mb-12 text-center">
                 My Food Requests
             </h2>
 
@@ -91,7 +91,7 @@ const MyFoodRequest = () => {
                     <div className="w-56 sm:w-72 h-56 sm:h-72">
                         <Lottie animationData={NoData} loop />
                     </div>
-                    <p className="text-green-800 text-xl sm:text-2xl font-semibold text-center">
+                    <p className="text-deepgreen text-xl sm:text-2xl font-semibold text-center">
                         You haven't requested for any food
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center items-center gap-3 pb-8">
@@ -149,19 +149,19 @@ const MyFoodRequest = () => {
                                                         <img src={food.foodImage} alt={food.foodName} />
                                                     </div>
                                                 </div>
-                                                <div className="text-sm sm:text-base font-bold">{food.foodName}</div>
+                                                <div className="text-sm text-deepgreen sm:text-base font-bold">{food.foodName}</div>
                                             </div>
                                         </td>
-                                        <td className="p-4 md:p-2 text-center font-medium hidden sm:table-cell">{food.foodDonatorName}</td>
-                                        <td className="p-4 md:p-2 text-center text-green-700 font-medium">
+                                        <td className="p-4 md:p-2 text-deepgreen text-center font-medium hidden sm:table-cell">{food.foodDonatorName}</td>
+                                        <td className="p-4 md:p-2 text-center text-deepgreen font-medium">
                                             <div className="flex items-center justify-center gap-1">
-                                                <MdLocationOn className="text-green-500" />
+                                                <MdLocationOn className="text-lightgreen" />
                                                 {food.pickupLocation}
                                             </div>
                                         </td>
-                                        <td className="p-4 md:p-2 text-center text-green-700 font-medium">
+                                        <td className="p-4 md:p-2 text-center text-deepgreen font-medium">
                                             <div className="flex items-center justify-center gap-1">
-                                                <MdEvent className="text-green-500" />
+                                                <MdEvent className="text-lightgreen" />
                                                 {new Date(food.expireDate).toLocaleString("en-GB", {
                                                     day: "2-digit",
                                                     month: "2-digit",
@@ -173,7 +173,7 @@ const MyFoodRequest = () => {
                                                 })}
                                             </div>
                                         </td>
-                                        <td className="p-4 md:p-2 text-center font-medium hidden sm:table-cell">{food.requestedQuantity}</td>
+                                        <td className="p-4 md:p-2 text-center text-deepgreen font-medium hidden sm:table-cell">{food.requestedQuantity}</td>
                                         <td className="p-4 md:p-2 text-center">
                                             <button
                                                 onClick={() => handleCancel(food._id)}

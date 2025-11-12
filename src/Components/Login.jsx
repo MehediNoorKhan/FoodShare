@@ -29,7 +29,7 @@ const Login = () => {
                 const lastVisited = localStorage.getItem(`lastVisited-${user.email}`);
                 navigate(lastVisited || "/");
             })
-            .catch((error) => {
+            .catch(() => {
                 setLoading(false);
                 toast.error("Invalid credentials");
             });
@@ -50,6 +50,12 @@ const Login = () => {
                         Login Now!
                     </h1>
 
+                    {/* ✅ Demo Credentials Box */}
+                    <div className="border border-lightgreen bg-white rounded-md p-4 mb-6 text-sm text-gray-700">
+                        <p><strong>User Email:</strong> messi@gmail.com</p>
+                        <p><strong>Password:</strong> Brock9173</p>
+                    </div>
+
                     {/* Skeleton Loader */}
                     {loading ? (
                         <div className="space-y-4">
@@ -66,7 +72,7 @@ const Login = () => {
                                 <input
                                     type="email"
                                     name="email"
-                                    className="input input-bordered w-full text-lightgreen"
+                                    className="input input-bordered w-full text-lightgreen dark:bg-white"
                                     placeholder="Email"
                                     required
                                 />
@@ -76,7 +82,7 @@ const Login = () => {
                                 <input
                                     type="password"
                                     name="password"
-                                    className="input input-bordered w-full text-lightgreen"
+                                    className="input input-bordered w-full text-lightgreen dark:bg-white"
                                     placeholder="Password"
                                     required
                                 />
@@ -91,7 +97,7 @@ const Login = () => {
                         </form>
                     )}
 
-                    <div className="text-sm mt-4 text-center lg:text-left">
+                    <div className="text-sm mt-4 text-center lg:text-left dark:text-gray-600">
                         Not have an account?{" "}
                         <Link to="/register" className="text-blue-600 hover:underline">
                             Register
