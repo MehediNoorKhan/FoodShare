@@ -84,7 +84,7 @@ export const router = createBrowserRouter([
                 element: <PrivateRoute><FoodDetails /></PrivateRoute>,
                 loader: async ({ params }) => {
                     try {
-                        const res = await axios.get(`https://assignment11-b015f.web.app/food/${params.id}`);
+                        const res = await axios.get(`https://foodhub-amber.vercel.app/food/${params.id}`);
                         return res.data;
                     } catch (error) {
                         console.error('Error fetching food details:', error);

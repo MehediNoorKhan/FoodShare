@@ -43,7 +43,7 @@ const FoodDetails = () => {
         };
 
         try {
-            const res = await axios.post("https://assignment11-b015f.web.app/requestfoods", requestData);
+            const res = await axios.post("https://foodhub-amber.vercel.app/requestfoods", requestData);
             if (res.data.success) {
                 Swal.fire({
                     icon: "success",

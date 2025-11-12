@@ -3,7 +3,7 @@ import auth from '../Firebase/firebase.init';
 import { getIdToken } from 'firebase/auth';
 
 const axiosSecure = axios.create({
-    baseURL: 'https://assignment11-b015f.web.app',
+    baseURL: 'https://foodhub-amber.vercel.app',
     withCredentials: true,
 });
 

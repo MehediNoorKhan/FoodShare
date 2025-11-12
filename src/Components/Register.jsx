@@ -136,7 +136,7 @@ const Register = () => {
         try {
             await createUser(email, password);
             await logout();
-            await axios.post("https://assignment11-b015f.web.app/users", userinfos);
+            await axios.post("https://foodhub-amber.vercel.app/users", userinfos);
 
             await Swal.fire({
                 icon: "success",

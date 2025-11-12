@@ -19,7 +19,7 @@ const stripePromise = loadStripe(
 // Base URL for API
 const BASE_URL =
     import.meta.env.MODE === "development"
-        ? "https://assignment11-b015f.web.app"
+        ? "https://foodhub-amber.vercel.app"
         : "https://foodhub-amber.vercel.app";
 
 // ----- Checkout Form Component -----

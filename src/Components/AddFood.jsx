@@ -19,7 +19,7 @@ const AddFood = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const res = await axios.get(`https://assignment11-b015f.web.app/users/${user?.email}`);
+                const res = await axios.get(`https://foodhub-amber.vercel.app/users/${user?.email}`);
                 setPostCount(res.data?.post || 0);
             } catch (err) {
                 console.error(err);
@@ -106,7 +106,7 @@ const AddFood = () => {
                 createdAt: new Date(),
             };
 
-            await axios.post("https://assignment11-b015f.web.app/food", foodData);
+            await axios.post("https://foodhub-amber.vercel.app/food", foodData);
 
             Swal.fire("Added!", "Food added successfully ✅", "success");
             navigate("/availablefood");

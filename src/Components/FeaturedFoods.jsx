@@ -17,7 +17,7 @@ const FeaturedFoods = () => {
         const fetchFoods = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get("https://assignment11-b015f.web.app/food");
+                const res = await axios.get("https://foodhub-amber.vercel.app/food");
                 setFeaturedFoods(res.data || []);
             } catch (err) {
                 console.error("Error fetching featured foods:", err);
@@ -168,3 +168,5 @@ const FeaturedFoods = () => {
 };
 
 export default FeaturedFoods;
+
+

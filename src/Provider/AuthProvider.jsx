@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
 
     const updateMembership = async (email, status) => {
         try {
-            await axios.patch(`https://assignment11-b015f.web.app/users/membership/${email}`, {
+            await axios.patch(`https://foodhub-amber.vercel.app/users/membership/${email}`, {
                 membership: status,
             });
             setUserData((prev) => ({ ...prev, membership: status }));
@@ -57,7 +57,7 @@ const AuthProvider = ({ children }) => {
     const fetchLoggedInUser = async (email, retries = 3, delay = 1000) => {
         for (let i = 0; i < retries; i++) {
             try {
-                const response = await axios.get(`https://assignment11-b015f.web.app/users/${email}`);
+                const response = await axios.get(`https://foodhub-amber.vercel.app/users/${email}`);
                 if (response.data) {
                     setUserData(response.data);
                     setLoading(false); // ✅ Stop loading here

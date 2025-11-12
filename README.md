@@ -2,8 +2,8 @@
 
 ## 🌐 Live Website
 
-**Frontend:** [https://assignment11-b015f.web.app](https://assignment11-b015f.web.app)  
-**Backend:** [https://assignment11-b015f.web.app/](https://assignment11-b015f.web.app/)
+**Frontend:** [https://foodhub-amber.vercel.app](https://foodhub-amber.vercel.app)  
+**Backend:** [https://foodhub-amber.vercel.app/](https://foodhub-amber.vercel.app/)
 
 ---
 

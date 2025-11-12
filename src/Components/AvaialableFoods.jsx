@@ -27,7 +27,7 @@ const AvailableFoods = () => {
         const delayDebounce = setTimeout(async () => {
             setLoading(true);
             try {
-                const res = await axios.get("https://assignment11-b015f.web.app/available-foods", {
+                const res = await axios.get("https://foodhub-amber.vercel.app/available-foods", {
                     params: { search: searchTerm },
                 });
 

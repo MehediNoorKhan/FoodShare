@@ -22,7 +22,7 @@ const SocialLogin = ({ from }) => {
 
         // Save user info to MongoDB
         axios
-          .post("https://assignment11-b015f.web.app/users", userInfo)
+          .post("https://foodhub-amber.vercel.app/users", userInfo)
           .then(() => {
             toast.success("Google login successful!");
             navigate(from || "/");
