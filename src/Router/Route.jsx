@@ -18,6 +18,7 @@ import About from "../Components/About";
 import FeaturedFoods from "../Components/FeaturedFoods";
 import Membership from "../Components/Membership";
 import PaymentSuccess from "../Components/PaymentSuccess";
+import Error from "../Components/Error";
 
 
 export const router = createBrowserRouter([
@@ -100,6 +101,12 @@ export const router = createBrowserRouter([
                     </PrivateRoute>
                 ),
             },
+            {
+                path: "*",
+                element: <Error></Error>,
+            }
+
         ],
+
     },
 ]);

@@ -15,6 +15,10 @@ const AddFood = () => {
     const [postCount, setPostCount] = useState(null); // Track user's post count
     const imageHostKey = import.meta.env.VITE_IMGBB_KEY;
 
+    useEffect(() => {
+        document.title = "Add Food";
+    }, []);
+
     // Fetch user post count
     useEffect(() => {
         const fetchUserData = async () => {

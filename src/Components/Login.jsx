@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SocialLogin from "./SocialLogin";
 import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -13,6 +13,11 @@ const Login = () => {
     const navigate = useNavigate();
     const from = location.state || "/";
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        document.title = "Login";
+    }, []);
+
 
     const handleSubmit = (e) => {
         e.preventDefault();

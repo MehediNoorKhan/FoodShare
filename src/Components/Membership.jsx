@@ -24,6 +24,10 @@ const BASE_URL =
 
 // ----- Checkout Form Component -----
 const CheckoutForm = ({ price, user, onMembershipUpdate }) => {
+
+    useEffect(() => {
+        document.title = "Membership";
+    }, []);
     const stripe = useStripe();
     const elements = useElements();
     const [clientSecret, setClientSecret] = useState("");

@@ -29,6 +29,11 @@ const RegisterSkeleton = () => (
 );
 
 const Register = () => {
+
+    useEffect(() => {
+        document.title = "Register";
+    }, []);
+
     const { createUser, logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);

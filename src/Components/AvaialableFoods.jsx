@@ -21,6 +21,10 @@ const AvailableFoods = () => {
     const foodsPerPage = 8;
 
     useEffect(() => {
+        document.title = "Available Foods";
+    }, []);
+
+    useEffect(() => {
         AOS.init({ duration: 800, once: true });
     }, []);
 

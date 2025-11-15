@@ -22,6 +22,12 @@ const FoodDetails = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (food?.foodName) {
+            document.title = `${food.foodName} | Food Details`;
+        }
+    }, [food]);
+
+    useEffect(() => {
         const timer = setTimeout(() => setLoading(false), 1000);
         return () => clearTimeout(timer);
     }, []);

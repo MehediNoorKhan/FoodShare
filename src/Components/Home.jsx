@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { motion } from "framer-motion";
 import Banner from "./Banner";
 import FeaturedFoods from "./FeaturedFoods";
@@ -13,7 +13,11 @@ const SkeletonSection = ({ height = "h-64" }) => (
     <div className={`w-full ${height} bg-gray-200 animate-pulse rounded-lg my-8`}></div>
 );
 
+
 const Home = () => {
+    useEffect(() => {
+        document.title = "Home";
+    }, []);
     return (
         <div className="overflow-x-hidden">
             {/* Banner with fade-in */}

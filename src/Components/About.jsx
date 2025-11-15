@@ -10,6 +10,10 @@ export default function About() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        document.title = "About";s
+    }, []);
+
+    useEffect(() => {
         const timer = setTimeout(() => setLoading(false), 1200);
         return () => clearTimeout(timer);
     }, []);

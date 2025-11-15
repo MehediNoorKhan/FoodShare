@@ -11,6 +11,10 @@ import Lottie from "lottie-react";
 import Swal from "sweetalert2";
 
 const MyFoodRequest = () => {
+    useEffect(() => {
+        document.title = "My Food Request";
+    }, []);
+
     const { user } = useContext(AuthContext);
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
